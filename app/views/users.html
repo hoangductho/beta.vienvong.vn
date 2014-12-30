@@ -1,0 +1,59 @@
+<div class="table-responsive">
+    <table datatable="" dt-options="dtOptions" dt-column-defs="dtColumnDefs" class="table table-striped table-bordered table-hover dataTable no-footer"
+           id="dataTables-example" aria-describedby="dataTables-example_info">
+        <thead>
+        <tr role="row">
+            <th class="sorting_asc" tabindex="0" aria-controls="dataTables-example" rowspan="1"
+                colspan="1" aria-sort="ascending"
+                aria-label="Game Name: activate to sort column ascending" style="width: 138px;">Game
+                Name
+            </th>
+            <th class="sorting" tabindex="0" aria-controls="dataTables-example" rowspan="1"
+                colspan="1" aria-label="Platform(s): activate to sort column ascending"
+                style="width: 152px;">Platform(s)
+            </th>
+            <th class="sorting" tabindex="0" aria-controls="dataTables-example" rowspan="1"
+                colspan="1" aria-label="Engine version: activate to sort column ascending"
+                style="width: 171px;">Engine version
+            </th>
+            <th class="sorting" tabindex="0" aria-controls="dataTables-example" rowspan="1"
+                colspan="1" aria-label="Game Status: activate to sort column ascending"
+                style="width: 128px;">Status
+            </th>
+            <th class="sorting" tabindex="0" aria-controls="dataTables-example" rowspan="1"
+                colspan="1" aria-label="Manage: activate to sort column ascending"
+                style="width: 167px;">Manage
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr class="gradeX odd" ng-repeat="game in listGames">
+            <td class="icon-game sorting_1 name">
+                <a href="/games/detail?id={{game.id}}">
+                    <img src="{{game.icon}}">
+                    <strong>{{game.name}}</strong>
+                </a>
+            </td>
+            <td class="platform">{{game.platform}}</td>
+            <td class="text-center version ">{{game.version}}</td>
+            <td class="text-center status">{{game.status}}</td>
+            <td class=" ">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-xs dropdown-toggle"
+                            data-toggle="dropdown">
+                        <i class="fa fa-bars fa-fw"></i> Manager
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu pull-right" role="menu">
+                        <li ng-repeat="manager in listManagers"><a href="{{manager.href}}?id={{game.id}}"><i class="fa {{manager.icon}} fa-fw"></i>{{manager.name}}</a>
+                        </li>
+                    </ul>
+                </div>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>

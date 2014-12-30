@@ -16,7 +16,8 @@
     "font-awesome": "~4.2.0",
     "angular-markdown-toolkit": "*",
     "angular-ui-router": "~0.2.13",
-    "angular-off-click": "~0.0.4"
+    "angular-off-click": "~0.0.4",
+    "angular-datatables": "~0.3.0"
   },
   "devDependencies": {
     "angular-mocks": "1.2.16",

@@ -19,7 +19,8 @@ angular
         'markdown',
         'Facebook',
         'ui.router',
-        'offClick'
+        'offClick',
+        'datatables'
     ])
     .config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
 
@@ -54,6 +55,15 @@ angular
             .state('root.support', {
                 url:'/support',
                 templateUrl: 'views/support.html'
+            })
+            .state('root.manager', {
+                url:'/manager',
+                templateUrl: 'views/manager.html'
+            })
+            .state('root.users', {
+                url:'/users',
+                templateUrl: 'views/users.html',
+                controller: 'UsersCtrl'
             });
 
         $locationProvider.html5Mode(true);
