@@ -1,0 +1,60 @@
+/*
+Error: File to import not found or unreadable: bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss.
+       Load paths:
+         
+        on line 3 of vienvong.scss
+
+1: $icon-font-path: "../bower-components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/";
+2: // bower:scss
+3: @import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
+4: // endbower
+5: 
+6: // Defining values  ;
+7: $screen-xs-min: 420px;
+8: $screen-ss-max: ($screen-xs-min - 1);
+
+Backtrace:
+vienvong.scss:3
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/tree/import_node.rb:66:in `rescue in import'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/tree/import_node.rb:45:in `import'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/tree/import_node.rb:28:in `imported_file'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/tree/import_node.rb:37:in `css_import?'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/tree/visitors/perform.rb:301:in `visit_import'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/tree/visitors/base.rb:36:in `visit'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/tree/visitors/perform.rb:158:in `block in visit'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/stack.rb:79:in `block in with_base'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/stack.rb:115:in `with_frame'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/stack.rb:79:in `with_base'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/tree/visitors/perform.rb:158:in `visit'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/tree/visitors/base.rb:52:in `block in visit_children'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/tree/visitors/base.rb:52:in `map'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/tree/visitors/base.rb:52:in `visit_children'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/tree/visitors/perform.rb:167:in `block in visit_children'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/tree/visitors/perform.rb:179:in `with_environment'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/tree/visitors/perform.rb:166:in `visit_children'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/tree/visitors/base.rb:36:in `block in visit'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/tree/visitors/perform.rb:186:in `visit_root'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/tree/visitors/base.rb:36:in `visit'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/tree/visitors/perform.rb:157:in `visit'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/tree/visitors/perform.rb:8:in `visit'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/tree/root_node.rb:36:in `css_tree'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/tree/root_node.rb:29:in `render_with_sourcemap'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/engine.rb:368:in `_render_with_sourcemap'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/engine.rb:285:in `render_with_sourcemap'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/plugin/compiler.rb:489:in `update_stylesheet'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/plugin/compiler.rb:215:in `block in update_stylesheets'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/plugin/compiler.rb:209:in `each'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/plugin/compiler.rb:209:in `update_stylesheets'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/plugin.rb:82:in `update_stylesheets'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/exec/sass_scss.rb:350:in `watch_or_update'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/exec/sass_scss.rb:50:in `process_result'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/exec/base.rb:52:in `parse'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/lib/sass/exec/base.rb:19:in `parse!'
+/home/hoanggia/.gem/ruby/gems/sass-3.4.8/bin/scss:13:in `<top (required)>'
+/usr/local/bin/scss:23:in `load'
+/usr/local/bin/scss:23:in `<main>'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Error: File to import not found or unreadable: bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss.\A        Load paths:\A          \A         on line 3 of vienvong.scss\A \A 1: $icon-font-path: \"../bower-components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/\";\A 2: // bower:scss\A 3: @import \"bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss\";\A 4: // endbower\A 5: \A 6: // Defining values  ;\A 7: $screen-xs-min: 420px;\A 8: $screen-ss-max: ($screen-xs-min - 1);"; }

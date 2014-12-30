@@ -1,0 +1,572 @@
+$icon-font-path: "../bower-components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/";
+// bower:scss
+@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
+// endbower
+
+// Defining values  ;
+$screen-xs-min: 420px;
+$screen-ss-max: ($screen-xs-min - 1);
+$screen-sm-min: 768px;
+$screen-xs-max: ($screen-sm-min - 1);
+$screen-md-min: 992px;
+$screen-sm-max: ($screen-md-min - 1);
+$screen-lg-min: 1200px;
+$screen-md-max: ($screen-lg-min - 1);
+
+@media (max-width: $screen-ss-max) {
+  @include make-grid(ss);
+
+  .col-ss-0 {
+    display: none;
+  }
+}
+
+@media (max-width: $screen-xs-max){
+  .col-xs-0-max {
+    display: none;
+  }
+}
+
+@media (min-width: $screen-xs-min){
+  .col-xs-0-min {
+    display: none;
+  }
+}
+
+@media (max-width: $screen-sm-max){
+  .col-sm-0-max {
+    display: none;
+  }
+}
+
+@media (min-width: $screen-sm-min){
+  .col-sm-0-min {
+    display: none;
+  }
+}
+
+@media (max-width: $screen-md-max){
+  .col-md-0-max {
+    display: none;
+  }
+}
+
+@media (min-width: $screen-md-min){
+  .col-md-0-min {
+    display: none;
+  }
+}
+
+@media (min-width: $screen-lg-min){
+  .col-lg-0 {
+    display: none;
+  }
+}
+
+//-----------------------------------------------------------------------------
+// custom of vienvong
+//-----------------------------------------------------------------------------
+
+$font-stack: Helvetica, sans-serif;
+$primary-width: 960px;
+
+$shadow-color: #999;
+$border-color: #ccc;
+$none-color: #ffffff;
+$body-color: #e9eaed;
+$font-color: #2a2a2a;
+$g-plus-color: #dd4b39;
+
+$primary-bgc: #00aeef;
+$second-bgc: #20afdf;
+
+
+.col-one {
+  background-color: blue;
+}
+
+.col-two {
+  background-color: green;
+}
+
+.col-three {
+  background-color: #ffff00;
+}
+
+//------------------------------------------------------------------------
+// Shared Styles
+//------------------------------------------------------------------------
+
+/* Space out content a bit */
+body, div, span, p {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  overflow: auto;
+  background-color: $body-color;
+}
+
+.gradient {
+  @include gradient-vertical($primary-bgc, $second-bgc, 0%, 100%);
+  @include gradient-vertical-three-colors($primary-bgc, $second-bgc, 100%, $primary-bgc);
+}
+
+.box-shadow {
+  @include box-shadow(-1px 1px 1px $shadow-color);
+}
+
+.primary {
+  width: 100%;
+  max-width: $primary-width;
+}
+
+.primary-color {
+  color: $primary-bgc;
+}
+
+.primary-bgc {
+  background-color: $second-bgc !important;
+}
+
+.white-bgc {
+  background-color: $none-color !important;
+}
+
+.none-effect {
+  border: none !important;
+  border-radius: 0 !important;
+  outline: none !important;
+}
+
+.none-radius {
+  border-radius: 0 !important;
+}
+
+input, button, textarea, select {
+  @extend .none-radius;
+}
+
+.none-space {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.max-left {
+  padding-left: 0;
+  margin-left: 0;
+}
+
+.none-style {
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+.max-right {
+  padding-right: 0;
+  margin-right: 0;
+}
+
+.full-size {
+  width: 100%;
+}
+
+.g-plus {
+  color: $g-plus-color !important;
+}
+
+//---------------------------------------------------------------
+// Header Styles
+//---------------------------------------------------------------
+$header-height: 38px;
+$footer-height: 50px;
+//$header-color: #202020;
+//$primary-bgc: #bebfbf;
+//$second-bgc: #dcdada;
+$header-color: #fff;
+
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  margin: 0;
+  z-index: 100;
+}
+
+@media (max-height: $screen-xs-min) {
+  .header {
+    position: absolute;
+  }
+}
+
+.header-color {
+  color: $header-color;
+}
+
+.header-box {
+  font-size: x-large;
+  color: $header-color;
+}
+
+.header .header-box {
+  width: 100%;
+  height: $header-height;
+  padding-top: 3px;
+}
+
+.header .logo {
+
+}
+
+.header .feature {
+  text-align: right;
+}
+
+.menu-button {
+  display: none;
+}
+
+@media (max-width: $screen-sm-max) {
+  .menu-button {
+    display: inline;
+  }
+}
+
+.header .header-button {
+//  width: $header-height;
+//  max-width: $header-height;
+  font-size: medium;
+  padding-top: 5px;
+//  padding-right: 0!important;
+}
+
+.header .header-bars {
+  margin-top: 1px;
+}
+
+.header-bars .bar {
+  position: absolute;
+  right: 0;
+  width: 315px;
+  max-width: 315px;
+  //  max-width: 250px;
+  border: 1px solid $border-color;
+  border-top: none;
+  border-right: none;
+  background-color: $second-bgc;
+  padding: 7px;
+}
+
+.header-bars .search-bar {
+  width: 100%;
+}
+
+
+/* Login bar style*/
+.header-bars .login-bar {
+  width: 100%;
+
+  // -------------
+  .login-box {
+    width: 100%;
+    padding: 9px;
+    border: 1px solid $g-plus-color;
+    font-size: smaller;
+
+    // -------
+    .end-box {
+      border-bottom: 1px solid $g-plus-color;
+    }
+
+    // -------
+    p{
+      color: $font-color;
+      padding-bottom: 9px;
+    }
+
+    // ------
+    .login-button {
+      text-align: center;
+    }
+
+    // -----
+    .login-button img {
+      max-width: 80%;
+      margin: 9px auto;
+    }
+
+    // -----
+    .user-terms {
+      padding-top: 9px;
+    }
+
+    // -----
+    .login-title {
+      padding-bottom: 9px;
+      margin-bottom: 9px;
+    }
+
+    // -----
+    .login-title img{
+      width: 58px;
+      height: 58px;
+      border: 1px solid $g-plus-color;
+    }
+  }
+}
+
+/* End login bar style*/
+
+.header .header-box .form-control {
+  height: auto !important;
+}
+
+// ----------------------------------------------------------
+// Section Styles
+// ----------------------------------------------------------
+
+.section {
+  width: 100%;
+  padding-top: $header-height !important;
+  padding-bottom: 15px !important;
+}
+
+.express {
+  float: left;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.main-menu-box {
+  position: fixed;
+}
+
+@media (max-height: $screen-ss-max) {
+  .main-menu-box {
+    position: absolute;
+    width: 100%;
+    padding: 15px auto;
+  }
+}
+
+.main-menu-hide {
+  /* this is just another form of hiding an element */
+  display: block;
+}
+
+.express .main-menu .nav > li > a {
+  color: $font-color;
+  padding: 10px 0px !important;
+}
+
+@media (max-width: $screen-sm-max) {
+  .main-menu-hide {
+    display: none;
+  }
+
+  .main-menu-show {
+    display: block!important;
+    position: absolute;
+    top: $header-height;
+    left: 0;
+    z-index: 10;
+    background-color: $primary-bgc;
+    border: 1px $border-color solid;
+  }
+
+  .main-menu-box {
+    background-color: $primary-bgc;
+    padding: 15px;
+    width: 315px;
+    max-width: 315px;
+  }
+
+  .express .main-menu .nav > li > a {
+    color: $header-color;
+    padding: 10px 8px !important;
+  }
+
+  .express .main-menu .nav > li > a:hover {
+    color: $font-color;
+  }
+}
+
+// ----------------------------------------------------------
+// Post Style
+// ----------------------------------------------------------
+
+$post-bgc: #fff;
+
+.box-title {
+//  display: inherit;
+  font-size: larger;
+  font-weight: bold;
+  text-align: center;
+}
+
+.box-title {
+  margin-top: 10px;
+}
+
+.express hr {
+  border-color: $border-color;
+  margin: 15px auto;
+}
+
+.post {
+  background-color: $post-bgc;
+  margin-bottom: 15px !important;
+  border: 1px solid $border-color;
+}
+
+.post:hover {
+  border-color: $second-bgc;
+}
+
+//---------------------
+
+/* Flexible image size*/
+.post .post-avatar {
+}
+
+.post .post-avatar .avatar{
+  position: relative;
+  width: 100%;		/* desired width */
+}
+.post .post-avatar .avatar:before{
+  content: "";
+  display: block;
+  padding-top: 100% * (9/16); 	/* initial ratio of 1:1*/
+}
+.post .post-avatar img{
+  position:  absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.post .post-avatar img {
+  width: 100%;
+  height: 100%;
+}
+
+/* end flexible image size*/
+
+.post p {
+  margin-top: 7px;
+}
+
+.post .post-title p{
+  font-size: large;
+}
+
+@media (max-width: $screen-md-max) {
+  .post .post-title p{
+    font-size: large;
+  }
+}
+
+@media (max-width: $screen-sm-max) {
+  .post .post-title p{
+    font-size: medium;
+  }
+}
+
+@media (max-width: $screen-xs-max) {
+  .post .post-title p{
+    font-size: medium;
+  }
+}
+
+// ----------------------------------------------------------
+// Detail post styles
+// ----------------------------------------------------------
+
+.detail {
+
+  .detail-box {
+    margin-bottom: 15px;
+  }
+}
+
+// ----------------------------------------------------------
+// Write post styles
+// ----------------------------------------------------------
+
+.write {
+  color: $font-color;
+  border: 1px solid $border-color;
+  padding: 15px;
+
+  .data-box {
+    margin-bottom: 15px;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+}
+
+// ----------------------------------------------------------
+// Profile Page Styles
+// ----------------------------------------------------------
+
+.profile {
+  .avatar {
+    img {
+      width: 100px;
+      height: 100px;
+      max-width: 100px;
+      max-height: 100px;
+      border: 1px $border-color solid;
+    }
+
+    img.me-avatar {
+      position: absolute;
+      background-color: $body-color;
+    }
+  }
+
+  .box-content {
+    margin-bottom: 10px;
+  }
+
+  .box-label {
+    margin-bottom: 7px;
+  }
+}
+
+
+// ----------------------------------------------------------
+// Footer Styles
+// ----------------------------------------------------------
+
+.footer {
+  width: 100%;
+  height: $footer-height;
+  border-bottom: 1px solid $primary-bgc;
+  @include box-shadow(-1px -1px 1px $shadow-color);
+}
+
+// ----------------------------------------------------------
+// Only-screen Styles
+// ----------------------------------------------------------
+
+// Usage
+@media (max-width: $screen-xs-max) {
+  //  .header {
+  //    position: relative;
+  //  }
+  .container {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}
+
+@media (max-width: $screen-ss-max) {
+  .header .logo {
+    margin-left: 7px !important;
+  }
+}

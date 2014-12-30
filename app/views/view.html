@@ -1,0 +1,45 @@
+<div class="box-title">
+    <div class="detail-title">
+        Markdown For AngularJS
+    </div>
+</div>
+<hr>
+<div class="list-post">
+    <div class="detail container-fluid none-space">
+        <div class="detail-social detail-box">
+            <div class="fb-like" data-href="https://localhost"
+                 data-layout="button_count" data-action="like" data-show-faces="false"
+                 data-share="true"></div>
+        </div>
+        <div class="detail-content detail-box">
+            <div markdown-safe-viewer content="##Markdown Safe Editor Demo##">
+
+            </div>
+            <hr>
+        </div>
+
+        <div class="add-comment detail-box" ng-init="addcomment=false">
+            <div class="comment-button" ng-class="{'hidden':addcomment}">
+                <a class="btn btn-link max-left"  ng-click="addcomment=true">
+                    <i class="fa fa-plus"></i> Add Comment
+                </a>
+            </div>
+            <div class="comment-editor" ng-class="{'hidden':addcomment==false}">
+                <form ng-submit="addcomment()">
+                    <div class="button-box detail-box">
+                        <a class="btn btn-link max-left" ng-click="addcomment=false">
+                            <i class="fa fa-minus"></i> Hidden
+                        </a>
+                        <div class="button-right pull-right">
+                            <button type="submit" class="btn btn-info">Add</button>
+                            <button type="reset" class="btn btn-danger">Clear</button>
+                        </div>
+                    </div>
+
+                    <markdown-safe suffix="-comment"></markdown-safe>
+                </form>
+            </div>
+            <hr>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,163 @@
+<div class="header">
+    <div class="header-box gradient box-shadow container" ng-init="option='searchbar'">
+        <div class="menu-button col-ss-1 col-xs-1 col-sm-1" ng-init="main_menu=false"
+             ng-click="main_menu=!(main_menu&&option=='main_menu'); option='main_menu'">
+            <i class="fa fa-list-ul"></i>
+        </div>
+        <div class="logo col-ss-4 col-xs-4 col-sm-3 col-md-2 col-lg-2 pull-left">
+            <a href="#" class="none-style">Bootstrap</a>
+        </div>
+        <!--<div class="slide col-xs-0 col-sm-5 col-md-6 col-lg-6">-->
+        <!--<p></p>-->
+        <!--</div>-->
+        <div class="feature col-ss-6 col-xs-6 col-sm-4 col-md-4 col-lg-4 pull-right none-space">
+            <div class="pull-right none-space full-size max-right">
+                <div class="header-search col-sm-0-max col-md-9">
+                    <form>
+                        <div class="col-md-10 none-space">
+                            <input type="text" name="search" class="form-control none-effect">
+                        </div>
+                        <div class="col-md-2 none-space">
+                            <button type="submit" class="form-control none-effect">
+                                <i class="fa fa-search primary-color"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-3 max-right pull-right">
+                    <div class="header-button search-bar-button col-ss-4 col-xs-4 col-sm-4 col-md-0-min"
+                         ng-click="searchbar=!(searchbar&&option=='searchbar'); option='searchbar'">
+                        <i class="fa fa-search header-color"></i>
+                    </div>
+                    <div class="header-button facebook-bar-button col-ss-4 col-xs-4 col-sm-4 col-md-6 col-lg-6"
+                         ng-click="facebook=!(facebook&&option=='fbbox'); option='fbbox'">
+                        <i class="fa fa-facebook header-color"></i>
+                    </div>
+                    <div class="header-button login-bar-button col-ss-4 col-xs-4 col-sm-4 col-md-6 col-lg-6"
+                         ng-click="loginbox=!(loginbox&&option=='loginbox'); option='loginbox'">
+                        <i class="fa fa-user header-color"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="header-bars">
+        <div class="feature-bars col-ss-12 col-xs-8 col-sm-6 col-md-4 col-lg-4 pull-right max-right none-space">
+            <!-- Search Box-->
+            <div class="search-bar bar pull-right col-md-0-min" ng-init="searchbar=false"
+                 ng-class="{'hidden':searchbar==false||option!='searchbar'}" off-click="searchbar=false" off-click-filter=".search-bar-button">
+                <form>
+                    <div class="col-xs-10 none-space">
+                        <input type="text" name="search" class="form-control none-effect">
+                    </div>
+                    <div class="col-xs-2 none-space">
+                        <button type="submit" class="form-control none-effect">
+                            <i class="fa fa-search primary-color"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <!-- End search box-->
+
+            <!-- Facebook like box -->
+            <div class="facebook-bar bar white-bgc pull-right" ng-init="facebook=false"
+                 ng-class="{'hidden':facebook==false||option!='fbbox'}" off-click="facebook=false" off-click-filter=".facebook-bar-button">
+            <!--<div class="facebook-bar bar white-bgc pull-right" ng-init="facebook=false"-->
+                    <!--ng-if="facebook&&option=='fbbox'">-->
+                <div class="white-bgc">
+                     <div class="fb-like-box" data-href="https://www.facebook.com/vienvong.vn" data-width="100%"
+                          data-height="100%" data-colorscheme="light" data-show-faces="true" data-header="false"
+                          data-stream="false" data-show-border="true"></div>
+                </div>
+            </div>
+            <!-- End facebook like box-->
+
+            <!-- Login box-->
+            <div class="login-bar bar white-bgc pull-right" ng-init="loginbox=false"
+                 ng-class="{'hidden':loginbox==false||option!='loginbox'}" off-click="loginbox=false" off-click-filter=".login-bar-button">
+                <div class="login-box">
+                    <div class="login-title end-box">
+                        <img src="/images/vienvong1.png">
+                        <strong class="g-plus"> Login</strong>
+                    </div>
+                    <div class="login-description end-box">
+                        <p><i class="fa fa-caret-right g-plus"></i> Our Site using OpenID Connect (OAuth 2.0) to
+                            registry and manage User</p>
+
+                        <p><i class="fa fa-caret-right g-plus"></i> We are using G-mail as main condition to identify
+                            user</p>
+                    </div>
+                    <div class="login-button end-box">
+                        <a href="javascript;">
+                            <img src="/images/googleplus.png">
+                        </a>
+                    </div>
+                    <div class="user-terms">
+                        <a href="javascript">
+                            This terms for users
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- End login box-->
+
+        </div>
+    </div>
+</div>
+<div class="section container">
+    <div class="express">
+        <div class="main-menu main-menu-hide col-ss-12 col-xs-5 col-sm-3 col-md-2 col-lg-2 none-space"
+             ng-class="{'main-menu-show':(main_menu&&option=='main_menu')}"
+             off-click="main_menu=false" off-click-filter=".menu-button"
+             ng-include="'views/mainMenu.html'">
+        </div>
+        <div ui-view id="Middle" class="col-ss-12 col-xs-6 col-sm-8 col-md-6 col-lg-6">
+        </div>
+        <div class="col-ss-0 col-xs-6 col-sm-4 col-md-4 col-lg-4">
+            <div class="box-title">Blog Posts</div>
+            <hr>
+            <div class="list-blog">
+                <div class="post container-fluid none-space">
+                    <div class="post-avatar">
+                        <div class="avatar col-lg-12 none-space">
+                            <img src="http://dantri4.vcmedia.vn/y0V2Vnsx49nhQPv7HdH/Image/2013/07/tlinh16071311-d66d5.jpg">
+                        </div>
+                    </div>
+                    <div class="post-description col-lg-12">
+                        <div class="post-info">
+                            <p>29-11-2014 15:04</p>
+                        </div>
+                        <div class="post-title">
+                            <p>10 creative recipes to reinvent your Thanksgiving leftovers</p>
+                        </div>
+                        <div class="post-social">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="post container-fluid none-space">
+                    <div class="post-avatar">
+                        <div class="avatar col-lg-12 none-space">
+                            <img src="http://dantri4.vcmedia.vn/y0V2Vnsx49nhQPv7HdH/Image/2013/07/tlinh16071311-d66d5.jpg">
+                        </div>
+                    </div>
+                    <div class="post-description col-lg-12">
+                        <div class="post-info">
+                            <p>29-11-2014 15:04</p>
+                        </div>
+                        <div class="post-title">
+                            <p>10 creative recipes to reinvent your Thanksgiving leftovers</p>
+                        </div>
+                        <div class="post-social">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="footer gradient container">
+    <div class="footer-box"></div>
+</div>

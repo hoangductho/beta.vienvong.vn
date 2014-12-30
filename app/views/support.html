@@ -1,0 +1,33 @@
+<div class="box-title">
+    <div class="detail-title">
+        Support
+    </div>
+</div>
+<hr>
+<div class="support write container-fluid">
+    <form ng-submit="supporting()">
+        <!-- E-mail Address--->
+        <div class="container-fluid row">
+            <div class="box-label col-lg-3 col-md-3 none-space">
+                <strong>E-mail:</strong>
+            </div>
+            <div class="box-content col-lg-9 col-md-9 none-space">
+                <input type="email" class="form-control" name="email">
+            </div>
+        </div>
+
+        <br>
+        <p></p>
+
+        <!-- Editor-->
+        <markdown-safe suffix="-article" rows="10"></markdown-safe>
+        <!-- End Editor-->
+
+        <div class="button-box row">
+            <div class="button-right pull-right container-fluid">
+                <button type="reset" class="btn btn-danger">Clear</button>
+                <button type="submit" class="btn btn-info">Create</button>
+            </div>
+        </div>
+    </form>
+</div>

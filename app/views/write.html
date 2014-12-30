@@ -1,0 +1,73 @@
+<div class="box-title">
+    Write New Post
+</div>
+<hr>
+<div class="write container-fluid">
+    <form ng-submit="writting()">
+
+        <!-- Main info-->
+        <div class="data-box row">
+            <div class="box-label col-sm-4 col-xs-12">
+                <strong>Post Title:</strong>
+            </div>
+            <div class="input-data col-sm-8 col-xs-12">
+                <input type="text" name="title" class="form-control">
+            </div>
+        </div>
+
+        <div class="data-box row">
+            <div class="box-label col-sm-4 col-xs-12">
+                <strong>Post ID:</strong>
+            </div>
+            <div class="input-data col-sm-8 col-xs-12">
+                <input name="pid" disabled value="122113812327671231" class="form-control">
+            </div>
+        </div>
+
+        <div class="data-box row">
+            <div class="box-label col-sm-4 col-xs-12">
+                <strong>Avatar:</strong>
+            </div>
+            <div class="input-data col-sm-8 col-xs-12">
+                <label class="btn max-left" for="avatar">
+                    <img src="/images/upload_photo.png" id="avatar-alias" width="160px" height="120px">
+                </label>
+                <input name="avatar" type="file" id="avatar" class="form-control hidden">
+            </div>
+        </div>
+
+        <hr><!-- End Main Info-->
+
+        <!-- Keyword-->
+        <div class="data-box row">
+            <div class="box-label col-sm-4 col-xs-12">
+                <strong>Keyword:</strong>
+            </div>
+            <div class="input-data col-sm-8 col-xs-12">
+                <input type="text" name="keyword" class="form-control">
+            </div>
+        </div>
+
+        <div class="data-box row">
+            <div class="box-label col-sm-4 col-xs-12">
+                <strong>Tags:</strong>
+            </div>
+            <div class="input-data col-sm-8 col-xs-12">
+                <textarea class="form-control" rows="1"></textarea>
+            </div>
+        </div>
+
+        <hr><!-- End keyword-->
+
+        <!-- Editor-->
+        <markdown-safe suffix="-article" rows="10"></markdown-safe>
+        <!-- End Editor-->
+
+        <div class="button-box row">
+            <div class="button-right pull-right container-fluid">
+                <button type="reset" class="btn btn-danger">Clear</button>
+                <button type="submit" class="btn btn-info">Create</button>
+            </div>
+        </div>
+    </form>
+</div>
