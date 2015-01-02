@@ -7,16 +7,17 @@
 angular.module('angularApp')
     .controller('UsersCtrl', function ($scope,DTOptionsBuilder, DTColumnDefBuilder) {
         $scope.dtOptions = DTOptionsBuilder.newOptions()
-            .withPaginationType('full_numbers')
+            .withPaginationType('simple_numbers')
             .withDisplayLength(10)
-//                    .withDOM('pitrfl')
+            //.withDOM('pitrfl')
             .withBootstrap();
 
         $scope.dtColumnDefs = [
-            DTColumnDefBuilder.newColumnDef(0).notSortable(),
-            DTColumnDefBuilder.newColumnDef(1).notSortable(),
+            DTColumnDefBuilder.newColumnDef(0),
+            DTColumnDefBuilder.newColumnDef(1),
 //                DTColumnDefBuilder.newColumnDef(1).notVisible(),
-            DTColumnDefBuilder.newColumnDef(2)
+            DTColumnDefBuilder.newColumnDef(2).notSortable(),
+            DTColumnDefBuilder.newColumnDef(3).notSortable(),
         ];
 
         var listGames = [

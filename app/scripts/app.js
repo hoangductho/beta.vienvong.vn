@@ -20,7 +20,13 @@ angular
         'Facebook',
         'ui.router',
         'offClick',
-        'datatables'
+        'datatables',
+
+        'about',
+        'auth',
+        'manager',
+        'static',
+        'user'
     ])
     .config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
 
@@ -31,39 +37,6 @@ angular
                 abstract: true,
                 templateUrl: 'views/template.html',
                 controller: 'MainCtrl'
-            })
-            .state('root.home', {
-                url:'/',
-                templateUrl: 'views/home.html'
-            })
-            .state('root.view', {
-                url:'/view',
-                templateUrl: 'views/view.html'
-            })
-            .state('root.write', {
-                url:'/write',
-                templateUrl: 'views/write.html'
-            })
-            .state('root.profile', {
-                url:'/profile',
-                templateUrl: 'views/profile.html'
-            })
-            .state('root.registry', {
-                url:'/registry',
-                templateUrl: 'views/registry.html'
-            })
-            .state('root.support', {
-                url:'/support',
-                templateUrl: 'views/support.html'
-            })
-            .state('root.manager', {
-                url:'/manager',
-                templateUrl: 'views/manager.html'
-            })
-            .state('root.users', {
-                url:'/users',
-                templateUrl: 'views/users.html',
-                controller: 'UsersCtrl'
             });
 
         $locationProvider.html5Mode(true);
