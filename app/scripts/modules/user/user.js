@@ -19,7 +19,8 @@ angular
         $stateProvider
             .state('root.user', {
                 abstract: true,
-                templateUrl: modulePath + 'views/user_template.html'
+                templateUrl: modulePath + 'views/user_template.html',
+                controller: 'userMainCtrl'
             })
             .state('root.user.profile', {
                 url:'/profile',

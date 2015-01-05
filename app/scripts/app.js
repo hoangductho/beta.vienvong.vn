@@ -28,9 +28,11 @@ angular
         'static',
         'user'
     ])
-    .config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
+    .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $routeProvider) {
 
-        $urlRouterProvider.otherwise("/");
+        $urlRouterProvider
+            .when('/', '/home')
+            .otherwise("/");
 
         $stateProvider
             .state('root', {

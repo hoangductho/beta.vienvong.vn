@@ -18,14 +18,16 @@ angular
         $stateProvider
             .state('root.static', {
                 abstract: true,
-                templateUrl: modulePath + 'views/static_template.html'
+                templateUrl: modulePath + 'views/static_template.html',
+                controller: 'staticMainCtrl'
             })
             .state('root.static.home', {
-                url:'/',
-                templateUrl: modulePath + 'views/home.html'
+                url:'/home',
+                templateUrl: modulePath + 'views/home.html',
+                controller: 'staticHomeCtrl'
             })
             .state('root.static.view', {
-                url:'/view',
+                url:'/view/:id',
                 templateUrl: modulePath + 'views/view.html'
             });
     });

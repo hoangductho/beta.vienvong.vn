@@ -18,7 +18,8 @@ angular
         $stateProvider
             .state('root.manager', {
                 abstract: true,
-                templateUrl: modulePath + 'views/manager_template.html'
+                templateUrl: modulePath + 'views/manager_template.html',
+                controller: 'managerMainCtrl'
             })
             .state('root.manager.posts', {
                 url:'/manager/posts',

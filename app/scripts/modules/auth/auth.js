@@ -19,7 +19,8 @@ angular
         $stateProvider
             .state('root.auth', {
                 abstract: true,
-                templateUrl: modulePath + 'views/auth_template.html'
+                templateUrl: modulePath + 'views/auth_template.html',
+                controller: 'authMainCtrl'
             })
             .state('root.auth.registry', {
                 url:'/registry',

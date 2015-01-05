@@ -19,7 +19,8 @@ angular
         $stateProvider
             .state('root.about', {
                 abstract: true,
-                templateUrl: modulePath + 'views/about_template.html'
+                templateUrl: modulePath + 'views/about_template.html',
+                controller: 'aboutMainCtrl'
             })
             .state('root.about.support', {
                 url: '/support',
