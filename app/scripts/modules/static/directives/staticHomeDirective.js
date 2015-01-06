@@ -8,9 +8,9 @@ angular
     .module('static')
     .directive('staticHomeDirective', function ($window) {
         return {
-            restrict: 'A',
+            restrict: 'AEC',
             link: function ($scope, $element) {
-                //console.log($scope);
+                console.log($scope);
 
                  function listPostRender(listPost) {
                     var chatViewer = $element.text(null);
@@ -20,17 +20,17 @@ angular
                             '<div class="post container-fluid none-space" ng-repeat="post in listPost">'+
                         '<div class="post-avatar col-lg-5 col-md-12 col-sm-5 none-space">'+
                         '<div class="avatar col-lg-12 none-space">'+
-                        '<img src="{{post.avatar}}">'+
+                        '<img src="' + post.avatar+ ' ">'+
                         '</div>'+
                         '</div>'+
                         '<div class="post-description col-lg-7 col-md-12 col-sm-7">'+
                         '<div class="post-title">'+
-                        '<a href="/view/{{post.id}}#{{post.friendly_title}}">'+
-                        '<p>{{post.title}}</p>'+
+                        '<a href="/view/' + post.id+ ' #' + post.friendly_title+ ' ">'+
+                        '<p>' + post.title+ ' </p>'+
                     '</a>'+
                     '</div>'+
                     '<div class="post-info">'+
-                     '<p>{{post.time}}</p>'+
+                     '<p>' + post.time+ ' </p>'+
                 '</div>'+
                 '<div class="post-social">'+
 
@@ -41,7 +41,9 @@ angular
                     });
                 };
 
-                $scope.$watch('listPost', listPostRender($scope.listPost));
+                console.log($scope.listPost);
+
+                $scope.$watch('content', listPostRender($scope.listPost));
             }
         }
     });

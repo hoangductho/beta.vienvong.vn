@@ -1,7 +1,8 @@
 <div class="header">
-    <div class="header-box gradient box-shadow container" ng-init="option='searchbar'">
-        <div class="menu-button col-ss-1 col-xs-1 col-sm-1" ng-init="main_menu=false"
-             ng-click="main_menu=!(main_menu&&option=='main_menu'); option='main_menu'">
+    <div class="header-box gradient box-shadow container" ng-init="option='searchbar'; main_menu=false">
+        <div class="menu-button col-ss-1 col-xs-1 col-sm-1"
+             ng-click="main_menu=!(main_menu&&option=='main_menu'); option='main_menu'"
+             off-click="main_menu=false">
             <i class="fa fa-list-ul"></i>
         </div>
         <div class="logo col-ss-4 col-xs-4 col-sm-3 col-md-2 col-lg-2 pull-left">
@@ -12,8 +13,8 @@
         <!--</div>-->
         <div class="feature col-ss-6 col-xs-6 col-sm-4 col-md-4 col-lg-4 pull-right none-space">
             <div class="pull-right none-space full-size max-right">
-                <div class="header-search col-sm-0-max col-md-9">
-                    <form>
+                <div class="header-search col-sm-0-max col-md-9" ng-controller="staticHomeCtrl">
+                    <form ng-submit="searchPosts()">
                         <div class="col-md-10 none-space">
                             <input type="text" name="search" class="form-control none-effect">
                         </div>
@@ -46,7 +47,7 @@
             <!-- Search Box-->
             <div class="search-bar bar pull-right col-md-0-min" ng-init="searchbar=false"
                  ng-class="{'hidden':searchbar==false||option!='searchbar'}" off-click="searchbar=false" off-click-filter=".search-bar-button">
-                <form>
+                <form ng-submit="searchPosts()" ng-controller="staticHomeCtrl">
                     <div class="col-xs-10 none-space">
                         <input type="text" name="search" class="form-control none-effect">
                     </div>

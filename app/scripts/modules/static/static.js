@@ -26,6 +26,11 @@ angular
                 templateUrl: modulePath + 'views/home.html',
                 controller: 'staticHomeCtrl'
             })
+            .state('root.static.search', {
+                url:'/search/:parameters',
+                templateUrl: modulePath + 'views/home.html',
+                controller: 'staticHomeCtrl'
+            })
             .state('root.static.view', {
                 url:'/view/:id',
                 templateUrl: modulePath + 'views/view.html'
