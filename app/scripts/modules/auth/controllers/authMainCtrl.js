@@ -6,6 +6,12 @@
 
 angular
     .module('auth')
-    .controller('authMainCtrl', function ($scope) {
+    .controller('authMainCtrl', function ($scope, $rootScope) {
+        $scope.login = function() {
+            $rootScope.online = true;
+        };
 
+        $scope.logout = function() {
+            $rootScope.online = false;
+        }
     });

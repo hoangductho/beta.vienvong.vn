@@ -77,26 +77,58 @@
             <div class="login-bar bar white-bgc pull-right" ng-init="loginbox=false"
                  ng-class="{'hidden':loginbox==false||option!='loginbox'}" off-click="loginbox=false" off-click-filter=".login-bar-button">
                 <div class="login-box">
-                    <div class="login-title end-box">
-                        <img src="/images/vienvong1.png">
-                        <strong class="g-plus"> Login</strong>
-                    </div>
-                    <div class="login-description end-box">
-                        <p><i class="fa fa-caret-right g-plus"></i> Our Site using OpenID Connect (OAuth 2.0) to
-                            registry and manage User</p>
+                    <div class="login-actions" ng-if="!online">
+                        <div class="login-title end-box">
+                            <img src="/images/vienvong1.png">
+                            <strong class="g-plus"> Login</strong>
+                        </div>
+                        <div class="login-description end-box">
+                            <p><i class="fa fa-caret-right g-plus"></i> Our Site using OpenID Connect (OAuth 2.0) to
+                                registry and manage User</p>
 
-                        <p><i class="fa fa-caret-right g-plus"></i> We are using G-mail as main condition to identify
-                            user</p>
+                            <p><i class="fa fa-caret-right g-plus"></i> We are using G-mail as main condition to identify
+                                user</p>
+                        </div>
+                        <div class="login-button end-box" ng-controller="authMainCtrl">
+                            <a href="javascript;" ng-click="login();">
+                                <img src="/images/googleplus.png">
+                            </a>
+                        </div>
                     </div>
-                    <div class="login-button end-box">
-                        <a href="javascript;">
-                            <img src="/images/googleplus.png">
-                        </a>
+                    <div class="user-actions" ng-if="online">
+                        <div class="login-title end-box">
+                            <img src="/images/vienvong1.png">
+                            <strong class="g-plus"> hoangductho.3690</strong>
+                        </div>
+                        <div class="login-description end-box">
+                            <p><i class="fa fa-caret-right g-plus"></i> Our Site using OpenID Connect (OAuth 2.0) to
+                                registry and manage User</p>
+
+                            <p><i class="fa fa-caret-right g-plus"></i> We are using G-mail as main condition to identify
+                                user</p>
+                        </div>
+                        <div class="end-box" ng-controller="authMainCtrl">
+                            <ul class="nav" id="side-menu">
+
+                                <li class="m-dashboard">
+                                    <a class="active" href="/profile"><i class="fa fa-folder-open-o fa-fw"></i> Profile</a>
+                                </li>
+
+                                <li class="m-dashboard">
+                                    <a href="/view"><i class="fa fa-signal fa-fw"></i> Statistic</a>
+                                </li>
+                                <li class="m-dashboard">
+                                    <a href="" ng-click="logout()"><i class="fa fa-power-off fa-fw"></i> Logout</a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="user-terms">
-                        <a href="javascript">
-                            This terms for users
-                        </a>
+                    <div class="user-term">
+                        <div class="user-terms">
+                            <a href="javascript">
+                                This terms for users
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
