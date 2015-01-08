@@ -1,6 +1,7 @@
+<!-- Page's Header-->
 <div class="header">
-    <div class="header-box gradient box-shadow container" ng-init="option='searchbar'; main_menu=false">
-        <div class="menu-button col-ss-1 col-xs-1 col-sm-1"
+    <div class="header-box gradient box-shadow container">
+        <div class="menu-button col-ss-1 col-xs-1 col-sm-1" ng-init="main_menu=false"
              ng-click="main_menu=!(main_menu&&option=='main_menu'); option='main_menu'"
              off-click="main_menu=false">
             <i class="fa fa-list-ul"></i>
@@ -35,7 +36,7 @@
                         <i class="fa fa-facebook header-color"></i>
                     </div>
                     <div class="header-button login-bar-button col-ss-4 col-xs-4 col-sm-4 col-md-6 col-lg-6"
-                         ng-click="loginbox=!(loginbox&&option=='loginbox'); option='loginbox'">
+                         ng-click="loginbox=!(loginbox&&option=='loginbox'); option='loginbox'" off-click="loginbox=false">
                         <i class="fa fa-user header-color"></i>
                     </div>
                 </div>
@@ -75,7 +76,7 @@
 
             <!-- Login box-->
             <div class="login-bar bar white-bgc pull-right" ng-init="loginbox=false"
-                 ng-class="{'hidden':loginbox==false||option!='loginbox'}" off-click="loginbox=false" off-click-filter=".login-bar-button">
+                 ng-class="{'hidden':loginbox==false||option!='loginbox'}">
                 <div class="login-box">
                     <div class="login-actions" ng-if="!online">
                         <div class="login-title end-box">
@@ -101,11 +102,7 @@
                             <strong class="g-plus"> hoangductho.3690</strong>
                         </div>
                         <div class="login-description end-box">
-                            <p><i class="fa fa-caret-right g-plus"></i> Our Site using OpenID Connect (OAuth 2.0) to
-                                registry and manage User</p>
-
-                            <p><i class="fa fa-caret-right g-plus"></i> We are using G-mail as main condition to identify
-                                user</p>
+                            <p><i class="fa fa-caret-right g-plus"></i> What do you want to do?</p>
                         </div>
                         <div class="end-box" ng-controller="authMainCtrl">
                             <ul class="nav" id="side-menu">
@@ -115,7 +112,7 @@
                                 </li>
 
                                 <li class="m-dashboard">
-                                    <a href="/view"><i class="fa fa-signal fa-fw"></i> Statistic</a>
+                                    <a href="/write"><i class="fa fa-pencil-square-o fa-fw"></i> Write</a>
                                 </li>
                                 <li class="m-dashboard">
                                     <a href="" ng-click="logout()"><i class="fa fa-power-off fa-fw"></i> Logout</a>
@@ -137,60 +134,15 @@
         </div>
     </div>
 </div>
+<!-- End of Header-->
+
+<!-- Page's Main content-->
 <div class="section container" ui-view>
-    <!--<div class="express">-->
-        <!--<div class="main-menu main-menu-hide col-ss-12 col-xs-5 col-sm-3 col-md-2 col-lg-2 none-space"-->
-             <!--ng-class="{'main-menu-show':(main_menu&&option=='main_menu')}"-->
-             <!--off-click="main_menu=false" off-click-filter=".menu-button"-->
-             <!--ng-include="'views/mainMenu.html'">-->
-        <!--</div>-->
-        <!--<div ui-view id="Middle" class="col-ss-12 col-xs-6 col-sm-8 col-md-6 col-lg-6">-->
-        <!--</div>-->
-        <!--<div class="col-ss-0 col-xs-6 col-sm-4 col-md-4 col-lg-4">-->
-            <!--<div class="box-title">Blog Posts</div>-->
-            <!--<hr>-->
-            <!--<div class="list-blog">-->
-                <!--<div class="post container-fluid none-space">-->
-                    <!--<div class="post-avatar">-->
-                        <!--<div class="avatar col-lg-12 none-space">-->
-                            <!--<img src="http://dantri4.vcmedia.vn/y0V2Vnsx49nhQPv7HdH/Image/2013/07/tlinh16071311-d66d5.jpg">-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="post-description col-lg-12">-->
-                        <!--<div class="post-info">-->
-                            <!--<p>29-11-2014 15:04</p>-->
-                        <!--</div>-->
-                        <!--<div class="post-title">-->
-                            <!--<p>10 creative recipes to reinvent your Thanksgiving leftovers</p>-->
-                        <!--</div>-->
-                        <!--<div class="post-social">-->
-
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-
-                <!--<div class="post container-fluid none-space">-->
-                    <!--<div class="post-avatar">-->
-                        <!--<div class="avatar col-lg-12 none-space">-->
-                            <!--<img src="http://dantri4.vcmedia.vn/y0V2Vnsx49nhQPv7HdH/Image/2013/07/tlinh16071311-d66d5.jpg">-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="post-description col-lg-12">-->
-                        <!--<div class="post-info">-->
-                            <!--<p>29-11-2014 15:04</p>-->
-                        <!--</div>-->
-                        <!--<div class="post-title">-->
-                            <!--<p>10 creative recipes to reinvent your Thanksgiving leftovers</p>-->
-                        <!--</div>-->
-                        <!--<div class="post-social">-->
-
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
 </div>
+<!-- End of main content-->
+
+<!-- Page's Footer-->
 <div class="footer gradient container">
     <div class="footer-box"></div>
 </div>
+<!-- En of Footer-->

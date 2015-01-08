@@ -23,7 +23,7 @@ angular
             })
             .state('root.manager.posts', {
                 url:'/manager/posts',
-                templateUrl: modulePath + 'views/manager.html'
+                templateUrl: modulePath + 'views/posts.html'
             })
             .state('root.manager.users', {
                 url:'/manager/users',

@@ -5,6 +5,12 @@
 
 angular
     .module('user')
-    .controller('userMainCtrl', function ($scope) {
+    .controller('userMainCtrl', function ($scope, $rootScope, $location) {
+        if(!$rootScope.online) {
+            $location.path('/home');
+            $rootScope.option = 'loginBoxShow'
+        }
 
+        var modulePath = '/scripts/modules/user/';
+        $scope.userMenuPath = modulePath + 'views/userMenu.html';
     });
