@@ -1,41 +1,38 @@
 <div class="box-title">Manager Posts</div>
 <hr>
 <div class="list-post">
-    <div class="post container-fluid none-space">
+    <div class="post container-fluid none-space" ng-repeat="post in managerListPosts">
         <div class="post-avatar col-lg-5 col-md-12 col-sm-5 none-space">
             <div class="avatar col-lg-12 none-space">
-                <img src="http://dantri4.vcmedia.vn/y0V2Vnsx49nhQPv7HdH/Image/2013/07/tlinh16071311-d66d5.jpg">
+                <img src="{{post.avatar}}">
             </div>
         </div>
         <div class="post-description col-lg-7 col-md-12 col-sm-7">
             <div class="post-title">
-                <p>10 creative recipes to reinvent your Thanksgiving leftovers
-                    10 creative recipes to reinvent your Thanksgiving leftovers
-                    10 creative recipes to reinvent your Thanksgiving leftovers
-                    10 creative recipes to reinvent your Thanksgiving leftovers</p>
+                <p>{{post.title}}</p>
             </div>
             <div class="post-info">
-                <p>29-11-2014 15:04</p>
+                <p>{{post.time}}</p>
             </div>
             <div class="manager-actions">
                 <div class="manager-actions-box pull-right">
                     <div class="pull-left">
-                        <button class="btn btn-success" title="publish">
+                        <button class="btn btn-success" title="publish" ng-click="publish(post.id)">
                             <i class="fa fa-thumbs-up"></i>
                         </button>
                     </div>
                     <div class="pull-left">
-                        <button class="btn btn-info" title="Reject">
+                        <button class="btn btn-info" title="Reject" ng-click="reject(post.id)">
                             <i class="fa fa-thumbs-down"></i>
                         </button>
                     </div>
                     <div class="pull-left">
-                        <button class="btn btn-primary" title="Edit">
+                        <button class="btn btn-primary" title="Edit" ng-click="edit(post.id)">
                             <i class="fa fa-file-o"></i>
                         </button>
                     </div>
                     <div class="pull-left">
-                        <button class="btn btn-danger" title="Delete">
+                        <button class="btn btn-danger" title="Delete" ng-click="delete(post.id)">
                             <i class="fa fa-trash-o"></i>
                         </button>
                     </div>

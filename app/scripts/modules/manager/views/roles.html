@@ -52,88 +52,33 @@
                             </thead>
                             <tbody>
 
-                            <tr class="gradeX odd" ng-repeat="game in listGames">
+                            <tr class="gradeX odd" ng-repeat="user in listUser">
                                 <td class="platform text-center">{{$index}}</td>
                                 <td class="icon-game sorting_1 name">
-                                    <a href="/games/detail?id={{game.id}}">
-                                        <strong>{{game.name}}</strong>
+                                    <a href="/games/detail?id={{user.id}}">
+                                        <strong>{{user.uname}}</strong>
                                     </a>
                                 </td>
-                                <td class="text-center status">Member</td>
+                                <td class="text-center status">{{user.status}}</td>
                                 <td class=" ">
                                     <div class="btn-group container-fluid">
                                         <div type="button" class="btn btn-default btn-xs dropdown-toggle"
                                              data-toggle="dropdown">
                                             <div class="text-left" style="width: 100px">
                                                 <div class="status-current pull-left" style="width: 90px">
-                                                    <i class="fa fa-bars fa-fw"></i> {{game.status}}
+                                                    <i class="fa fa-bars fa-fw"></i> {{user.role}}
                                                 </div>
                                                 <div class="dropdown-icon-bar pull-left" style="width: 5px">
                                                     <span class="caret"></span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            <li class="status">
-                                                <a href="#">
-                                                    <div class="pull-left" style="width: 25px">
-                                                        <i class="fa fa-thumbs-o-up"></i>
-                                                    </div>
-                                                    Active
+                                        <ul class="dropdown-menu pull-right" role="menu" ng-model="user.role">
+                                            <li class="status" ng-repeat="role in listRole">
+                                                <a href="" ng-click="user.role=role.alias">
+                                                    <i class="fa {{role.icon}} fa-fw"></i> {{role.alias}}
                                                 </a>
                                             </li>
-                                            <li class="status">
-                                                <a href="#">
-                                                    <div class="pull-left" style="width: 25px">
-                                                        <i class="fa fa-thumbs-o-down"></i>
-                                                    </div>
-                                                    Reject
-                                                </a>
-                                            </li>
-                                            <li class="status">
-                                                <a href="#">
-                                                    <div class="pull-left" style="width: 25px">
-                                                        <i class="fa fa-pencil-square-o"></i>
-                                                    </div>
-                                                    Pending
-                                                </a>
-                                            </li>
-                                            <li class="status">
-                                                <a href="#">
-                                                    <div class="pull-left" style="width: 25px">
-                                                        <i class="fa fa-unlock-alt"></i>
-                                                    </div>
-                                                    Banned
-                                                </a>
-                                            </li>
-                                            <li class="status">
-                                                <a href="#">
-                                                    <div class="pull-left" style="width: 25px">
-                                                        <i class="fa fa-trash-o"></i>
-                                                    </div>
-                                                    Block
-                                                </a>
-                                            </li>
-                                            <!--<li class="status">
-                                                <a href="#">
-                                                    <i class="fa fa-user"></i> Member
-                                                </a>
-                                            </li>
-                                            <li class="status">
-                                                <a href="#">
-                                                    <i class="fa fa-users"></i> Leader
-                                                </a>
-                                            </li>
-                                            <li class="status">
-                                                <a href="#">
-                                                    <i class="fa fa-book"></i> Manager
-                                                </a>
-                                            </li>
-                                            <li class="status">
-                                                <a href="#">
-                                                    <i class="fa fa-gavel"></i> Founder
-                                                </a>
-                                            </li>-->
                                         </ul>
                                     </div>
 

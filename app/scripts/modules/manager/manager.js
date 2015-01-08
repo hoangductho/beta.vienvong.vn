@@ -23,16 +23,17 @@ angular
             })
             .state('root.manager.posts', {
                 url:'/manager/posts',
-                templateUrl: modulePath + 'views/posts.html'
+                templateUrl: modulePath + 'views/posts.html',
+                controller: 'managerPostCtrl'
             })
             .state('root.manager.users', {
                 url:'/manager/users',
                 templateUrl: modulePath + 'views/users.html',
-                controller: 'UsersCtrl'
+                controller: 'managerUserCtrl'
             })
             .state('root.manager.roles', {
                 url:'/manager/roles',
                 templateUrl: modulePath + 'views/roles.html',
-                controller: 'UsersCtrl'
+                controller: 'managerRoleCtrl'
             });
     });
