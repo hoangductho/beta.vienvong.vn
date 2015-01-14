@@ -9,6 +9,10 @@
 class Publish_model extends CI_Model {
     public function __construct() {
         parent::__construct();
+
         $this->load->database();
+
+        $this->db->from('games');
+        $this->db->get('');
     }
 }
