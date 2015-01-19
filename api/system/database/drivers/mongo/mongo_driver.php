@@ -105,6 +105,28 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     // --------------------------------------------------------------------
 
     /**
+     * Initialize Database Settings
+     *
+     * @return    bool
+     */
+    public function initialize()
+    {
+        /* If an established connection is available, then there's
+		 * no need to connect and select the database.
+		 *
+		 * Depending on the database driver, conn_id can be either
+		 * boolean TRUE, a resource or an object.
+		 */
+        if ($this->connection) {
+            return TRUE;
+        } else {
+            $this->db_connect();
+        }
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
      * DB connect
      *
      * This is just a dummy method that all drivers will override.
@@ -200,12 +222,12 @@ class CI_DB_mongo_driver extends Mongo_query_builder
 
         $connection_string = "mongodb://";
 
-        if (empty($this->hostname)) {
-            show_error("The Host must be set to connect to MongoDB", 500);
+        if (empty($this->hostname) || !isset($this->hostname)) {
+            $this->hostname = 'localhost';
         }
 
-        if (empty($this->database)) {
-            show_error("The Database must be set to connect to MongoDB", 500);
+        if (empty($this->database) || !isset($this->database)) {
+            $this->database = 'admin';
         }
 
         if(isset($this->port) && !empty($this->port)):
@@ -278,10 +300,10 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     public function list_fields($table)
     {
         if($this->table_exists($table)) {
-            show_error('MongoDB do not support <b>list_fields</b> function. Because MongoDB Collections do not have fix structure', 500);
+            $this->display_error('MongoDB do not support <b>list_fields</b> function. Because MongoDB Collections do not have fix structure', '', TRUE);
             return TRUE;
         }else {
-            show_error('Table <b>"'.$table.'"</b> is not exist', 500);
+            $this->display_error('Table <b>"'.$table.'"</b> is not exist', '', TRUE);
             return FALSE;
         }
     }
@@ -298,10 +320,10 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     public function field_exists($field_name, $table_name)
     {
         if($this->table_exists($table_name)) {
-            show_error('MongoDB do not support <b>field_exists</b> function. Because MongoDB Collections do not have fix structure', 500);
+            $this->display_error('MongoDB do not support <b>field_exists</b> function. Because MongoDB Collections do not have fix structure', '', TRUE);
             return TRUE;
         }else {
-            show_error('Table <b>"'.$table_name.'"</b> is not exist', 500);
+            $this->display_error('Table <b>"'.$table_name.'"</b> is not exist', '', TRUE);
             return FALSE;
         }
     }
@@ -317,10 +339,10 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     public function field_data($table)
     {
         if($this->table_exists($table)) {
-            show_error('MongoDB do not support <b>field_data</b> function. Because MongoDB Collections do not have fix structure', 500);
+            $this->display_error('MongoDB do not support <b>field_data</b> function. Because MongoDB Collections do not have fix structure', '', TRUE);
             return TRUE;
         }else {
-            show_error('Table <b>"'.$table.'"</b> is not exist', 500);
+            $this->display_error('Table <b>"'.$table.'"</b> is not exist', '', TRUE);
             return FALSE;
         }
     }
@@ -624,21 +646,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     // --------------------------------------------------------------------
 
     /**
-     * Get SELECT query string
-     *
-     * Compiles a SELECT query string and returns the sql.
-     *
-     * @param    string    the table name to select from (optional)
-     * @param    bool    TRUE: resets QB values; FALSE: leave QB vaules alone
-     * @return    string
-     */
-    public function get_compiled_select($table = '', $reset = true)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
      * Get UPDATE query string
      *
      * Compiles an update query and returns the sql
@@ -665,19 +672,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
      * @return    object
      */
     public function get_where($table = '', $where = NULL, $limit = NULL, $offset = NULL)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * GROUP BY
-     *
-     * @param    string $by
-     * @param    bool $escape
-     * @return    CI_DB_query_builder
-     */
-    public function group_by($by, $escape = NULL)
     {
     }
 
@@ -719,28 +713,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
      */
     public function having($key, $value = NULL, $escape = NULL)
     {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Initialize Database Settings
-     *
-     * @return    bool
-     */
-    public function initialize()
-    {
-        /* If an established connection is available, then there's
-		 * no need to connect and select the database.
-		 *
-		 * Depending on the database driver, conn_id can be either
-		 * boolean TRUE, a resource or an object.
-		 */
-        if ($this->connection) {
-            return TRUE;
-        } else {
-            $this->db_connect();
-        }
     }
 
     // --------------------------------------------------------------------
@@ -885,18 +857,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
      * @return    CI_DB_query_builder
      */
     public function not_like($field, $match = '', $side = 'both', $escape = NULL)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Sets the OFFSET value
-     *
-     * @param    int $offset OFFSET value
-     * @return    CI_DB_query_builder
-     */
-    public function offset($offset)
     {
     }
 
@@ -1116,32 +1076,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     // --------------------------------------------------------------------
 
     /**
-     * Select
-     *
-     * Generates the SELECT portion of the query
-     *
-     * @param    string
-     * @param    mixed
-     * @return    CI_DB_query_builder
-     *
-     */
-
-    public function select($select = '*', $escape = NULL)
-    {
-        /*if (!is_array($includes)) {
-            $includes = array();
-        }
-        if (!empty($includes)) {
-            foreach ($includes as $col) {
-                $this->selects[$col] = TRUE;
-            }
-        }
-        return $this;*/
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
      * Select Average
      *
      * Generates a SELECT AVG(field) portion of a query
@@ -1152,38 +1086,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
      */
 
     public function select_avg($select = '', $alias = '')
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Select Max
-     *
-     * Generates a SELECT MAX(field) portion of a query
-     *
-     * @param    string    the field
-     * @param    string    an alias
-     * @return    CI_DB_query_builder
-     */
-
-    public function select_max($select = '', $alias = '')
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Select Min
-     *
-     * Generates a SELECT MIN(field) portion of a query
-     *
-     * @param    string    the field
-     * @param    string    an alias
-     * @return    CI_DB_query_builder
-     *
-     */
-    public function select_min($select = '', $alias = '')
     {
     }
 
@@ -1434,23 +1336,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
      * @return    string
      */
     public function update_string($table, $data, $where)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * WHERE
-     *
-     * Generates the WHERE portion of the query.
-     * Separates multiple calls with 'AND'.
-     *
-     * @param    mixed
-     * @param    mixed
-     * @param    bool
-     * @return    CI_DB_query_builder
-     */
-    public function where($key, $value = NULL, $escape = NULL)
     {
     }
 
