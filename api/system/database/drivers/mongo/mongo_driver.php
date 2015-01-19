@@ -1076,37 +1076,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     // --------------------------------------------------------------------
 
     /**
-     * Select Average
-     *
-     * Generates a SELECT AVG(field) portion of a query
-     *
-     * @param    string    the field
-     * @param    string    an alias
-     * @return    CI_DB_query_builder
-     */
-
-    public function select_avg($select = '', $alias = '')
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Select Sum
-     *
-     * Generates a SELECT SUM(field) portion of a query
-     *
-     * @param    string    the field
-     * @param    string    an alias
-     * @return    CI_DB_query_builder
-     */
-    public function select_sum($select = '', $alias = '')
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
      * The "set" function.
      *
      * Allows key/value pairs to be set for inserting or updating

@@ -15,14 +15,7 @@ class Mongo_query_builder extends CI_DB {
      *
      * @var	array
      */
-    protected $aggregate_setup;
-
-    /**
-     * QB Cache group function init parameter
-     *
-     * @var	array
-     */
-    protected $group_parameters;
+    protected $aggregate_setup = true;
 
     // --------------------------------------------------------------------
     /**
@@ -38,12 +31,16 @@ class Mongo_query_builder extends CI_DB {
      */
     public function get($table = '', $limit = NULL, $offset = NULL)
     {
+        $this->qb_groupby = array();
+
+        // set table will be query
         if ($table !== '')
         {
-            $this->_track_aliases($table);
+//            $this->_track_aliases($table);
             $this->from($table);
         }
 
+        // set limit and offset conditions
         if ( ! empty($limit))
         {
             $this->limit($limit, $offset);
@@ -55,26 +52,45 @@ class Mongo_query_builder extends CI_DB {
             $this->display_error("Table <b>\"$table\"</b> don't exists!", '', TRUE);
         }
 
-        if($this->aggregate_setup) {
+        if(!empty($this->qb_cache_groupby)) {
 
+            // Filter Where conditions
             if(!empty($this->qb_where)) {
-                $this->qb_groupby['$match'] = $this->qb_where;
+                array_push($this->qb_groupby, array('$match'=>$this->qb_where));
             }
 
-            var_dump($this->qb_groupby);
+            // Group By compute
+            if(!empty($this->qb_cache_groupby)) {
+                array_push($this->qb_groupby, $this->qb_cache_groupby);
+            }
 
+            // get result
             $result = $this->db->{$table}
                 ->aggregate($this->qb_groupby);
 
-            print_r(var_dump($result['result']));
         }else {
-            $result = $this->db->{$table}
+            /*$result = $this->db->{$table}
                 ->find($this->qb_where, $this->qb_select)
                 ->limit($this->qb_limit)
-                ->skip($this->qb_offset);
+                ->skip($this->qb_offset);*/
 
-            var_dump(iterator_to_array($result));
+            $select = array();
+            array_push($select, array('$match' => $this->qb_where));
+            array_push($select, array('$skip' => $this->qb_offset));
+            array_push($select, array('$limit' => $this->qb_limit));
+            array_push($select, array('$project' => $this->qb_select));
+
+            $result = $result = $this->db->{$table}
+                ->aggregate($select);
+
+//            var_dump(iterator_to_array($result));
         }
+
+        var_dump($result);
+
+        $this->_reset_select();
+
+        return $result;
     }
 
     // --------------------------------------------------------------------
@@ -252,21 +268,21 @@ class Mongo_query_builder extends CI_DB {
     public function group_by($by, $escape = NULL)
     {
         // convert group_by string to array
-        if(!is_array($by)) {
+        if(!empty($by) && !is_array($by)) {
             $by = explode(',', $by);
         }
 
         $group = array();
 
         if(empty($by)) {
-            $by = null;
+            $group = null;
         }else {
             foreach ($by as $key=>$value) {
                 $group[$value] = '$'.trim($value);
             }
         }
 
-        $this->qb_groupby['$group']['_id'] = $group;
+        $this->qb_cache_groupby['$group']['_id'] = $group;
 
         $this->aggregate_setup = true;
 
@@ -312,11 +328,11 @@ class Mongo_query_builder extends CI_DB {
             $alias = $select.'_'.strtoupper($type);
         }
 
-        if(empty($this->qb_groupby)) {
+        $this->qb_cache_groupby['$group'][$alias]['$'.$type] = '$'.$select;
+
+        if(empty($this->qb_cache_groupby['$group']['_id'])) {
             $this->group_by(null, FALSE);
         }
-
-        $this->qb_groupby['$group'][$alias]['$'.$type] = '$'.$select;
 
         return $this;
     }
@@ -357,6 +373,38 @@ class Mongo_query_builder extends CI_DB {
 
     // --------------------------------------------------------------------
 
+    /**
+     * Select Average
+     *
+     * Generates a SELECT AVG(field) portion of a query
+     *
+     * @param    string    the field
+     * @param    string    an alias
+     * @return    CI_DB_query_builder
+     */
+
+    public function select_avg($select = '', $alias = '')
+    {
+        $this->_max_min_avg_sum($select, $alias, 'AVG');
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Select Sum
+     *
+     * Generates a SELECT SUM(field) portion of a query
+     *
+     * @param    string    the field
+     * @param    string    an alias
+     * @return    CI_DB_query_builder
+     */
+    public function select_sum($select = '', $alias = '')
+    {
+        $this->_max_min_avg_sum($select, $alias, 'SUM');
+    }
+
+    // --------------------------------------------------------------------
 
 }
 /**

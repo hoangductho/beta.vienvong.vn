@@ -16,12 +16,12 @@ class Publish_model extends CI_Model {
 
         $this->db->select('UID, ID, Time, Title, Express');
         $this->db->from('Posts');
-//        $this->db->where($array);
-        $this->db->where('Keyword', 'Apple');
+        $this->db->where($array);
+//        $this->db->where('Keyword', 'Google');
         $this->db->limit(10);
-        $this->db->offset(12);
-        $this->db->group_by(array('UID'));
-        $this->db->select_max('ID', 'maxID');
+        $this->db->offset(5);
+//        $this->db->group_by(array('UID'));
+//        $this->db->select_sum('ID', 'avgID');
 //        print_r($this->db->get_compiled_select('', false));
         $this->db->get();
     }
