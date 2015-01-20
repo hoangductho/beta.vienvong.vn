@@ -141,7 +141,7 @@ class CI_DB_mongo_driver extends Mongo_query_builder
             'db' => $this->database
         );
         try {
-            $this->connection_string();
+            $this->_connection_string();
             $this->connection = new MongoClient($this->connection_string, $options);
 
             if (!sizeof($this->connection->getConnections())) {
@@ -217,7 +217,7 @@ class CI_DB_mongo_driver extends Mongo_query_builder
      *
      * @since v1.0.0
      */
-    private function connection_string()
+    private function _connection_string()
     {
 
         $connection_string = "mongodb://";
@@ -433,64 +433,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     // --------------------------------------------------------------------
 
     /**
-     * "Count All" query
-     *
-     * Generates a platform-specific query string that counts all records in
-     * the specified database
-     *
-     * @param    string
-     * @return    int
-     */
-    public function count_all($table = '')
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * "Count All Results" query
-     *
-     * Generates a platform-specific query string that counts all records
-     * returned by an Query Builder query.
-     *
-     * @param    string
-     * @return    int
-     */
-    public function count_all_results($table = '')
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Select database
-     *
-     * This is just a dummy method to allow drivers without such
-     * functionality to not declare it, while others will override it.
-     *
-     * @return      bool
-     */
-    public function db_select()
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * DB Prefix
-     *
-     * Prepends a database prefix if one exists in configuration
-     *
-     * @param    string    the table
-     * @return    string
-     */
-    public function dbprefix($table = '')
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
      * Set client character set
      *
      * @param    string
@@ -597,19 +539,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
      * @return    string
      */
     public function escape_str($str, $like = false)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Flush Cache
-     *
-     * Empties the QB cache
-     *
-     * @return    CI_DB_query_builder
-     */
-    public function flush_cache()
     {
     }
 
@@ -1002,17 +931,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     // --------------------------------------------------------------------
 
     /**
-     * The name of the platform in use (mysql, mssql, etc...)
-     *
-     * @return    string
-     */
-    public function platform()
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
      * Primary
      *
      * Retrieves the primary key. It assumes that the row in the first
@@ -1063,19 +981,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     // --------------------------------------------------------------------
 
     /**
-     * Reset Query Builder values.
-     *
-     * Publicly-visible method to reset the QB values.
-     *
-     * @return    CI_DB_query_builder
-     */
-    public function reset_query()
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
      * The "set" function.
      *
      * Allows key/value pairs to be set for inserting or updating
@@ -1086,20 +991,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
      * @return    CI_DB_query_builder
      */
     public function set($key, $value = '', $escape = NULL)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Set DB Prefix
-     *
-     * Set's the DB Prefix to something new without needing to reconnect
-     *
-     * @param    string    the prefix
-     * @return    string
-     */
-    public function set_dbprefix($prefix = '')
     {
     }
 

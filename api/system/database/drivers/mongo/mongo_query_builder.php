@@ -10,13 +10,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Mongo_query_builder extends CI_DB {
 
-    /**
-     * QB define using aggregate function
-     *
-     * @var	array
-     */
-    protected $aggregate_setup = true;
-
     // --------------------------------------------------------------------
     /**
      * Get
@@ -31,12 +24,15 @@ class Mongo_query_builder extends CI_DB {
      */
     public function get($table = '', $limit = NULL, $offset = NULL)
     {
+
         $this->qb_groupby = array();
 
         // set table will be query
         if ($table !== '')
         {
-//            $this->_track_aliases($table);
+            if(!empty($this->qb_from[0])) {
+                $this->qb_from = null;
+            }
             $this->from($table);
         }
 
@@ -46,7 +42,7 @@ class Mongo_query_builder extends CI_DB {
             $this->limit($limit, $offset);
         }
 
-        $table = str_replace('`','',$this->_from_tables());
+        $table = str_replace('`','',$this->qb_from[0]);
 
         if(!$this->table_exists($table)) {
             $this->display_error("Table <b>\"$table\"</b> don't exists!", '', TRUE);
@@ -69,26 +65,37 @@ class Mongo_query_builder extends CI_DB {
                 ->aggregate($this->qb_groupby);
 
         }else {
-            /*$result = $this->db->{$table}
-                ->find($this->qb_where, $this->qb_select)
-                ->limit($this->qb_limit)
-                ->skip($this->qb_offset);*/
 
             $select = array();
-            array_push($select, array('$match' => $this->qb_where));
-            array_push($select, array('$skip' => $this->qb_offset));
-            array_push($select, array('$limit' => $this->qb_limit));
-            array_push($select, array('$project' => $this->qb_select));
+
+            // build where conditions
+            if(!empty($this->qb_where)) {
+                array_push($select, array('$match' => $this->qb_where));
+            }
+
+            // build offset condition
+            if(!empty($this->qb_offset)) {
+                array_push($select, array('$skip' => $this->qb_offset));
+            }
+
+            // build limit condition
+            if(!empty($this->qb_limit)) {
+                array_push($select, array('$limit' => $this->qb_limit));
+            }
+
+            // build select required
+            if(!empty($this->qb_select)) {
+                array_push($select, array('$project' => $this->qb_select));
+            }
 
             $result = $result = $this->db->{$table}
                 ->aggregate($select);
-
-//            var_dump(iterator_to_array($result));
         }
 
-        var_dump($result);
+        $this->reset_query();
+        $this->flush_cache();
 
-        $this->_reset_select();
+
 
         return $result;
     }
@@ -114,7 +121,7 @@ class Mongo_query_builder extends CI_DB {
         }
 
         // get table name
-        $table = str_replace('`','',$this->_from_tables());
+        $table = str_replace('`','',$this->qb_from[0]);
 
         // build where conditions
         if(!empty($this->qb_where)) {
@@ -145,7 +152,8 @@ class Mongo_query_builder extends CI_DB {
 
         // clear cache of current query
         if($reset) {
-            $this->_reset_select();
+            $this->reset_query();
+            $this->flush_cache();
         }
 
         return $get_compiled;
@@ -402,6 +410,57 @@ class Mongo_query_builder extends CI_DB {
     public function select_sum($select = '', $alias = '')
     {
         $this->_max_min_avg_sum($select, $alias, 'SUM');
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * "Count All" query
+     *
+     * Generates a platform-specific query string that counts all records in
+     * the specified database
+     *
+     * @param    string
+     * @return    int
+     */
+    public function count_all($table = '')
+    {
+        if ($table === '')
+        {
+            return 0;
+        }
+
+        return $this->db->{$table}->count();
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * "Count All Results" query
+     *
+     * Generates a platform-specific query string that counts all records
+     * returned by an Query Builder query.
+     *
+     * @param    string
+     * @return    int
+     */
+    public function count_all_results($table = '')
+    {
+        // query database
+        /*$result = $this->db->{$table}
+            ->find($this->qb_where, $this->qb_select)
+            ->limit($this->qb_limit)
+            ->skip($this->qb_offset);*/
+
+        $result = $this->get($table);
+
+
+//        var_dump($result);
+
+        // clear cache of query
+        $this->reset_query();
+
+        return count($result['result']);
     }
 
     // --------------------------------------------------------------------

@@ -19,10 +19,13 @@ class Publish_model extends CI_Model {
         $this->db->where($array);
 //        $this->db->where('Keyword', 'Google');
         $this->db->limit(10);
-        $this->db->offset(5);
-//        $this->db->group_by(array('UID'));
-//        $this->db->select_sum('ID', 'avgID');
+        $this->db->offset(0);
+        $this->db->group_by(array('Keyword'));
+        $this->db->select_max('ID', 'avgID');
 //        print_r($this->db->get_compiled_select('', false));
-        $this->db->get();
+        var_dump($this->db->get());
+        var_dump($this->db->count_all_results('games'));
+
+        var_dump($this->db->count_all('Posts'));
     }
 }
