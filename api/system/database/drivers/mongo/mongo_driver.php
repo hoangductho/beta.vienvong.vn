@@ -350,64 +350,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     // --------------------------------------------------------------------
 
     /**
-     * Delete the cache files associated with a particular URI
-     *
-     * @param    string $segment_one = ''
-     * @param    string $segment_two = ''
-     * @return    bool
-     */
-    public function cache_delete($segment_one = '', $segment_two = '')
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Delete All cache files
-     *
-     * @return    bool
-     */
-    public function cache_delete_all()
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Disable Query Caching
-     *
-     * @return    bool    cache_on value
-     */
-    public function cache_off()
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Enable Query Caching
-     *
-     * @return    bool    cache_on value
-     */
-    public function cache_on()
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Set Cache Directory Path
-     *
-     * @param    string    the path to the cache directory
-     * @return    void
-     */
-    public function cache_set_path($path = '')
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
      * Enables a native PHP function to be run, using a platform agnostic wrapper.
      *
      * @param    string $function Function name
@@ -584,23 +526,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
      * @return    string
      */
     public function get_compiled_update($table = '', $reset = true)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Get_Where
-     *
-     * Allows the where clause, limit and offset to be added directly
-     *
-     * @param    string $table
-     * @param    string $where
-     * @param    int $limit
-     * @param    int $offset
-     * @return    object
-     */
-    public function get_where($table = '', $where = NULL, $limit = NULL, $offset = NULL)
     {
     }
 
@@ -866,23 +791,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     // --------------------------------------------------------------------
 
     /**
-     * OR WHERE
-     *
-     * Generates the WHERE portion of the query.
-     * Separates multiple calls with 'OR'.
-     *
-     * @param    mixed
-     * @param    mixed
-     * @param    bool
-     * @return    CI_DB_query_builder
-     */
-    public function or_where($key, $value = NULL, $escape = NULL)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
      * OR WHERE IN
      *
      * Generates a WHERE field IN('item', 'item') SQL query,
@@ -1034,32 +942,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
      * @return    mixed
      */
     public function simple_query($sql)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Start Cache
-     *
-     * Starts QB caching
-     *
-     * @return    CI_DB_query_builder
-     */
-    public function start_cache()
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Stop Cache
-     *
-     * Stops QB caching
-     *
-     * @return    CI_DB_query_builder
-     */
-    public function stop_cache()
     {
     }
 

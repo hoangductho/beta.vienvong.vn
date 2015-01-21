@@ -10,6 +10,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Mongo_query_builder extends CI_DB {
 
+    /**
+     * Comparison
+     *
+     * All comparison orders of where and having conditions
+     */
+    private  $comparison = array(
+                                    '$gte' => '>=',
+                                    '$lte' => '<=',
+                                    '$ne' => '!=',
+                                    '$gt' => '>',
+                                    '$lt' => '<'
+                                );
+
     // --------------------------------------------------------------------
     /**
      * Get
@@ -25,8 +38,6 @@ class Mongo_query_builder extends CI_DB {
     public function get($table = '', $limit = NULL, $offset = NULL)
     {
 
-        $this->qb_groupby = array();
-
         // set table will be query
         if ($table !== '')
         {
@@ -34,6 +45,8 @@ class Mongo_query_builder extends CI_DB {
                 $this->qb_from = null;
             }
             $this->from($table);
+        }elseif(empty($this->qb_from[0])) {
+            $this->display_error('Table\'s name just never setup.','',TRUE);
         }
 
         // set limit and offset conditions
@@ -48,25 +61,43 @@ class Mongo_query_builder extends CI_DB {
             $this->display_error("Table <b>\"$table\"</b> don't exists!", '', TRUE);
         }
 
-        if(!empty($this->qb_cache_groupby)) {
+        $select = $this->_build_stages();
+
+        $result = $result = $this->db->{$table}
+            ->aggregate($select);
+
+        $this->_reset_select();
+
+        return $result;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Build all stages of aggregate query function
+     *
+     * Generates a query stage array based on which functions were used.
+     * Should not be called directly.
+     *
+     * @return	array
+     */
+    private  function _build_stages()
+    {
+        $select = array();
+
+        if(!empty($this->qb_groupby)) {
 
             // Filter Where conditions
             if(!empty($this->qb_where)) {
-                array_push($this->qb_groupby, array('$match'=>$this->qb_where));
+                array_push($select, array('$match'=>$this->qb_where));
             }
 
             // Group By compute
-            if(!empty($this->qb_cache_groupby)) {
-                array_push($this->qb_groupby, $this->qb_cache_groupby);
+            if(!empty($this->qb_groupby)) {
+                array_push($select, $this->qb_groupby);
             }
 
-            // get result
-            $result = $this->db->{$table}
-                ->aggregate($this->qb_groupby);
-
         }else {
-
-            $select = array();
 
             // build where conditions
             if(!empty($this->qb_where)) {
@@ -87,15 +118,31 @@ class Mongo_query_builder extends CI_DB {
             if(!empty($this->qb_select)) {
                 array_push($select, array('$project' => $this->qb_select));
             }
-
-            $result = $result = $this->db->{$table}
-                ->aggregate($select);
         }
 
-        $this->reset_query();
-        $this->flush_cache();
+        return $select;
+    }
 
+    // --------------------------------------------------------------------
 
+    /**
+     * Get_Where
+     *
+     * Allows the where clause, limit and offset to be added directly
+     *
+     * @param    string $table
+     * @param    string $where
+     * @param    int $limit
+     * @param    int $offset
+     * @return    object
+     */
+    public function get_where($table = '', $where = NULL, $limit = NULL, $offset = NULL)
+    {
+        // set where conditions
+        $this->where($where);
+
+        // get result query
+        $result = $this->get($table, $limit, $offset);
 
         return $result;
     }
@@ -116,47 +163,31 @@ class Mongo_query_builder extends CI_DB {
         // set table will be query
         if ($table !== '')
         {
-            $this->_track_aliases($table);
+            if(!empty($this->qb_from[0])) {
+                $this->qb_from = null;
+            }
             $this->from($table);
+        }elseif(empty($this->qb_from[0])) {
+            $this->display_error('Table\'s name just never setup.','',TRUE);
         }
 
         // get table name
         $table = str_replace('`','',$this->qb_from[0]);
 
-        // build where conditions
-        if(!empty($this->qb_where)) {
-            $where = json_encode($this->qb_where);
-        }else {
-            $where = '{}';
-        }
+        // build aggregate stages
+        $stages = json_encode($this->_build_stages(), TRUE);
 
-        // build select fields
-        if(!empty($this->qb_select)) {
-            $select = json_encode($this->qb_select);
-        }else {
-            $select = '{}';
-        }
+        $stages = substr($stages, 1, strlen($stages)-2);
 
-        // build query
-        $get_compiled = "db.{$table}.find({$where},{$select})";
-
-        // build limited parameter
-        if(!empty($this->qb_limit)) {
-            $get_compiled .= ".limit({$this->qb_limit})";
-        }
-
-        // build offset parameter
-        if(!empty($this->qb_offset)) {
-            $get_compiled .= ".offset({$this->qb_offset})";
-        }
+        // build aggregate query
+        $get = "db.{$table}.aggregate({$stages})";
 
         // clear cache of current query
         if($reset) {
-            $this->reset_query();
-            $this->flush_cache();
+            $this->_reset_select();
         }
 
-        return $get_compiled;
+        return $get;
     }
 
     // --------------------------------------------------------------------
@@ -180,6 +211,24 @@ class Mongo_query_builder extends CI_DB {
     // --------------------------------------------------------------------
 
     /**
+     * OR WHERE
+     *
+     * Generates the WHERE portion of the query.
+     * Separates multiple calls with 'OR'.
+     *
+     * @param    mixed
+     * @param    mixed
+     * @param    bool
+     * @return    CI_DB_query_builder
+     */
+    public function or_where($key, $value = NULL, $escape = NULL)
+    {
+        $this->_wh('qb_where', $key, $value, ' OR ');
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
      * WHERE, HAVING
      *
      * @used-by	where()
@@ -198,16 +247,90 @@ class Mongo_query_builder extends CI_DB {
     {
 //        $qb_cache_key = ($qb_key === 'qb_having') ? 'qb_cache_having' : 'qb_cache_where';
 
+        if(empty($key)) {
+            return $this;
+        }
+
         if ( ! is_array($key))
         {
             $key = array($key => $value);
         }
 
+        $match = array();
+
         foreach($key as $wh=>$val) {
-            $this->{$qb_key}[$wh] = $val;
+            $complie = $this->_compile_where_comparison($wh, $val);
+
+            $match[$complie['key']] = $complie['value'];
+        }
+
+        if(trim($type) === 'OR'){
+            $this->{$qb_key} = $this->_build_or_where($this->{$qb_key}, $match);
+        }else {
+            $this->{$qb_key} = array_merge_recursive($this->{$qb_key}, $match);
         }
 
         return $this;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Build "OR" of Where
+     *
+     * Build "OR" phrase of Where conditions
+     *
+     * @param   array   $where
+     * @param   array   $match
+     * @return  array   new statement of where condition
+     */
+    protected function _build_or_where($where, $match) {
+
+        /*if(isset($where['$or'])){
+            $order['$or'] = array();
+            array_push($order['$or'], $match);
+            array_push($where['$or'], $order);
+        }else {
+            $order['$or'] = array();
+            array_push($order['$or'], $where);
+            array_push($order['$or'], $match);
+            $where = $order;
+        }*/
+        $order['$or'] = array();
+        array_push($order['$or'], $where);
+        array_push($order['$or'], $match);
+        $where = $order;
+        return $where;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Compile WHERE, HAVING statements
+     *
+     * Escapes identifiers in WHERE and HAVING statements at execution time.
+     *
+     * Required so that aliases are tracked properly, regardless of wether
+     * where(), or_where(), having(), or_having are called prior to from(),
+     * join() and dbprefix is added only if needed.
+     *
+     * @param	string	$key    field name compare
+     * @param   string  $value  value compare
+     * @return	string	SQL statement
+     */
+    protected function _compile_where_comparison($key, $value) {
+        foreach ($this->comparison as $comp_key => $comp_val) {
+            if(strpos($key, $comp_val) !== FALSE) {
+                return array(
+                    'key' => trim(str_replace($comp_val,'', $key)),
+                    'value' => array(
+                        $comp_key => $value
+                    )
+                );
+            }
+        }
+
+        return array('key' => trim($key), 'value' => $value);
     }
 
     // --------------------------------------------------------------------
@@ -290,9 +413,7 @@ class Mongo_query_builder extends CI_DB {
             }
         }
 
-        $this->qb_cache_groupby['$group']['_id'] = $group;
-
-        $this->aggregate_setup = true;
+        $this->qb_groupby['$group']['_id'] = $group;
 
         return $this;
     }
@@ -336,9 +457,9 @@ class Mongo_query_builder extends CI_DB {
             $alias = $select.'_'.strtoupper($type);
         }
 
-        $this->qb_cache_groupby['$group'][$alias]['$'.$type] = '$'.$select;
+        $this->qb_groupby['$group'][$alias]['$'.$type] = '$'.$select;
 
-        if(empty($this->qb_cache_groupby['$group']['_id'])) {
+        if(empty($this->qb_groupby['$group']['_id'])) {
             $this->group_by(null, FALSE);
         }
 
@@ -447,18 +568,7 @@ class Mongo_query_builder extends CI_DB {
     public function count_all_results($table = '')
     {
         // query database
-        /*$result = $this->db->{$table}
-            ->find($this->qb_where, $this->qb_select)
-            ->limit($this->qb_limit)
-            ->skip($this->qb_offset);*/
-
         $result = $this->get($table);
-
-
-//        var_dump($result);
-
-        // clear cache of query
-        $this->reset_query();
 
         return count($result['result']);
     }
