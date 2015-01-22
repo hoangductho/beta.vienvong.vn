@@ -556,22 +556,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     // --------------------------------------------------------------------
 
     /**
-     * HAVING
-     *
-     * Separates multiple calls with 'AND'.
-     *
-     * @param    string $key
-     * @param    string $value
-     * @param    bool $escape
-     * @return    object
-     */
-    public function having($key, $value = NULL, $escape = NULL)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
      * Insert
      *
      * Compiles an insert string and runs the query
@@ -728,22 +712,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     // --------------------------------------------------------------------
 
     /**
-     * OR HAVING
-     *
-     * Separates multiple calls with 'OR'.
-     *
-     * @param    string $key
-     * @param    string $value
-     * @param    bool $escape
-     * @return    object
-     */
-    public function or_having($key, $value = NULL, $escape = NULL)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
      * OR LIKE
      *
      * Generates a %LIKE% portion of the query.
@@ -785,40 +753,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
      * @return    CI_DB_query_builder
      */
     public function or_not_like($field, $match = '', $side = 'both', $escape = NULL)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * OR WHERE IN
-     *
-     * Generates a WHERE field IN('item', 'item') SQL query,
-     * joined with 'OR' if appropriate.
-     *
-     * @param    string $key The field to search
-     * @param    array $values The values searched on
-     * @param    bool $escape
-     * @return    CI_DB_query_builder
-     */
-    public function or_where_in($key = NULL, $values = NULL, $escape = NULL)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * OR WHERE NOT IN
-     *
-     * Generates a WHERE field NOT IN('item', 'item') SQL query,
-     * joined with 'OR' if appropriate.
-     *
-     * @param    string $key The field to search
-     * @param    array $values The values searched on
-     * @param    bool $escape
-     * @return    CI_DB_query_builder
-     */
-    public function or_where_not_in($key = NULL, $values = NULL, $escape = NULL)
     {
     }
 
@@ -1078,40 +1012,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
      * @return    string
      */
     public function update_string($table, $data, $where)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * WHERE IN
-     *
-     * Generates a WHERE field IN('item', 'item') SQL query,
-     * joined with 'AND' if appropriate.
-     *
-     * @param    string $key The field to search
-     * @param    array $values The values searched on
-     * @param    bool $escape
-     * @return    CI_DB_query_builder
-     */
-    public function where_in($key = NULL, $values = NULL, $escape = NULL)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * WHERE NOT IN
-     *
-     * Generates a WHERE field NOT IN('item', 'item') SQL query,
-     * joined with 'AND' if appropriate.
-     *
-     * @param    string $key The field to search
-     * @param    array $values The values searched on
-     * @param    bool $escape
-     * @return    CI_DB_query_builder
-     */
-    public function where_not_in($key = NULL, $values = NULL, $escape = NULL)
     {
     }
 

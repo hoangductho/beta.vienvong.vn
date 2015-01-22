@@ -85,12 +85,12 @@ class Mongo_query_builder extends CI_DB {
     {
         $select = array();
 
-        if(!empty($this->qb_groupby)) {
+        // Filter Where conditions
+        if(!empty($this->qb_where)) {
+            array_push($select, array('$match'=>$this->qb_where));
+        }
 
-            // Filter Where conditions
-            if(!empty($this->qb_where)) {
-                array_push($select, array('$match'=>$this->qb_where));
-            }
+        if(!empty($this->qb_groupby)) {
 
             // Group By compute
             if(!empty($this->qb_groupby)) {
@@ -98,11 +98,6 @@ class Mongo_query_builder extends CI_DB {
             }
 
         }else {
-
-            // build where conditions
-            if(!empty($this->qb_where)) {
-                array_push($select, array('$match' => $this->qb_where));
-            }
 
             // build offset condition
             if(!empty($this->qb_offset)) {
@@ -118,6 +113,11 @@ class Mongo_query_builder extends CI_DB {
             if(!empty($this->qb_select)) {
                 array_push($select, array('$project' => $this->qb_select));
             }
+        }
+
+        // Having group
+        if(!empty($this->qb_having)) {
+            array_push($select, array('$match'=>$this->qb_having));
         }
 
         return $select;
@@ -229,6 +229,78 @@ class Mongo_query_builder extends CI_DB {
     // --------------------------------------------------------------------
 
     /**
+     * WHERE IN
+     *
+     * Generates a WHERE field IN('item', 'item') SQL query,
+     * joined with 'AND' if appropriate.
+     *
+     * @param    string $key The field to search
+     * @param    array $values The values searched on
+     * @param    bool $escape
+     * @return    CI_DB_query_builder
+     */
+    public function where_in($key = NULL, $values = NULL, $escape = NULL)
+    {
+        $this->_where_in($key, $values);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * WHERE NOT IN
+     *
+     * Generates a WHERE field NOT IN('item', 'item') SQL query,
+     * joined with 'AND' if appropriate.
+     *
+     * @param    string $key The field to search
+     * @param    array $values The values searched on
+     * @param    bool $escape
+     * @return    CI_DB_query_builder
+     */
+    public function where_not_in($key = NULL, $values = NULL, $escape = NULL)
+    {
+        $this->_where_in($key, $values, TRUE);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * OR WHERE IN
+     *
+     * Generates a WHERE field IN('item', 'item') SQL query,
+     * joined with 'OR' if appropriate.
+     *
+     * @param    string $key The field to search
+     * @param    array $values The values searched on
+     * @param    bool $escape
+     * @return    CI_DB_query_builder
+     */
+    public function or_where_in($key = NULL, $values = NULL, $escape = NULL)
+    {
+        $this->_where_in($key, $values, FALSE, 'OR');
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * OR WHERE NOT IN
+     *
+     * Generates a WHERE field NOT IN('item', 'item') SQL query,
+     * joined with 'OR' if appropriate.
+     *
+     * @param    string $key The field to search
+     * @param    array $values The values searched on
+     * @param    bool $escape
+     * @return    CI_DB_query_builder
+     */
+    public function or_where_not_in($key = NULL, $values = NULL, $escape = NULL)
+    {
+        $this->_where_in($key, $values, TRUE, 'OR');
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
      * WHERE, HAVING
      *
      * @used-by	where()
@@ -276,6 +348,58 @@ class Mongo_query_builder extends CI_DB {
     // --------------------------------------------------------------------
 
     /**
+     * Internal WHERE IN
+     *
+     * @used-by	where_in()
+     * @used-by	or_where_in()
+     * @used-by	where_not_in()
+     * @used-by	or_where_not_in()
+     *
+     * @param	string	$key	The field to search
+     * @param	array	$values	The values searched on
+     * @param	bool	$not	If the statement would be IN or NOT IN
+     * @param	string	$type
+     * @param	bool	$escape
+     * @return	CI_DB_query_builder
+     */
+    protected function _where_in($key = NULL, $values = NULL, $not = FALSE, $type = 'AND ', $escape = NULL)
+    {
+        if ($key === NULL OR $values === NULL)
+        {
+            return $this;
+        }
+
+        if ( ! is_array($values))
+        {
+            $values = array($values);
+        }
+
+        if(!is_string($key)) {
+            $this->display_error("Field's name invalid. Field's is a string only", '', TRUE);
+        }
+
+        $match = array();
+
+        if(!$not){
+            $match[$key] = array('$in' => $values);
+        }else {
+            $match[$key] = array('$nin' => $values);
+        }
+
+//        array_push($match[$key], );
+
+        if(trim($type) === 'OR'){
+            $this->qb_where = $this->_build_or_where($this->qb_where, $match);
+        }else {
+            $this->qb_where = array_merge_recursive($this->qb_where, $match);
+        }
+
+        return $this;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
      * Build "OR" of Where
      *
      * Build "OR" phrase of Where conditions
@@ -285,21 +409,15 @@ class Mongo_query_builder extends CI_DB {
      * @return  array   new statement of where condition
      */
     protected function _build_or_where($where, $match) {
-
-        /*if(isset($where['$or'])){
-            $order['$or'] = array();
-            array_push($order['$or'], $match);
-            array_push($where['$or'], $order);
+        if(empty($where)) {
+            $where = $match;
         }else {
             $order['$or'] = array();
             array_push($order['$or'], $where);
             array_push($order['$or'], $match);
             $where = $order;
-        }*/
-        $order['$or'] = array();
-        array_push($order['$or'], $where);
-        array_push($order['$or'], $match);
-        $where = $order;
+        }
+
         return $where;
     }
 
@@ -421,6 +539,40 @@ class Mongo_query_builder extends CI_DB {
     // --------------------------------------------------------------------
 
     /**
+     * HAVING
+     *
+     * Separates multiple calls with 'AND'.
+     *
+     * @param    string $key
+     * @param    string $value
+     * @param    bool $escape
+     * @return    object
+     */
+    public function having($key, $value = NULL, $escape = NULL)
+    {
+        $this->_wh('qb_having', $key, $value);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * OR HAVING
+     *
+     * Separates multiple calls with 'OR'.
+     *
+     * @param    string $key
+     * @param    string $value
+     * @param    bool $escape
+     * @return    object
+     */
+    public function or_having($key, $value = NULL, $escape = NULL)
+    {
+        $this->_wh('qb_having', $key, $value, ' OR ');
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
      * SELECT [MAX|MIN|AVG|SUM]()
      *
      * @used-by	select_max()
@@ -435,9 +587,6 @@ class Mongo_query_builder extends CI_DB {
      */
     protected function _max_min_avg_sum($select = '', $alias = '', $type = 'MAX')
     {
-        // alias of aggregate function in operation
-        $aggregate_type = array('MAX' => '<', 'MIN' => '>', 'AVG' => '', 'SUM' => '');
-
         // filter select fields query input
         if ( ! is_string($select) OR $select === '')
         {
