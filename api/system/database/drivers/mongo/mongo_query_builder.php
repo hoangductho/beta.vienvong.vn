@@ -23,6 +23,26 @@ class Mongo_query_builder extends CI_DB {
                                     '$lt' => '<'
                                 );
 
+    /**
+     * Wildcard SQL Like
+     *
+     * All special characters of wildcard SQL Like
+     */
+    private $sql_wildcard = array(
+        0 =>'[',
+        1 => ']',
+        2 => '_');
+
+    /**
+     * Regular Express MongoDB
+     *
+     * All special characters of MongoDB Regex
+     */
+    private $mongo_regex = array(
+        0 => '.([',
+        1 => '])',
+        2 => '.{1}');
+
     // --------------------------------------------------------------------
     /**
      * Get
@@ -120,6 +140,7 @@ class Mongo_query_builder extends CI_DB {
             array_push($select, array('$match'=>$this->qb_having));
         }
 
+        var_dump($select[0]['$match']);
         return $select;
     }
 
@@ -205,7 +226,7 @@ class Mongo_query_builder extends CI_DB {
      */
     public function where($key, $value = NULL, $escape = NULL)
     {
-        $this->_wh('qb_where', $key, $value);
+        return $this->_wh('qb_where', $key, $value);
     }
 
     // --------------------------------------------------------------------
@@ -223,7 +244,7 @@ class Mongo_query_builder extends CI_DB {
      */
     public function or_where($key, $value = NULL, $escape = NULL)
     {
-        $this->_wh('qb_where', $key, $value, ' OR ');
+        return $this->_wh('qb_where', $key, $value, ' OR ');
     }
 
     // --------------------------------------------------------------------
@@ -241,7 +262,7 @@ class Mongo_query_builder extends CI_DB {
      */
     public function where_in($key = NULL, $values = NULL, $escape = NULL)
     {
-        $this->_where_in($key, $values);
+        return $this->_where_in($key, $values);
     }
 
     // --------------------------------------------------------------------
@@ -259,7 +280,7 @@ class Mongo_query_builder extends CI_DB {
      */
     public function where_not_in($key = NULL, $values = NULL, $escape = NULL)
     {
-        $this->_where_in($key, $values, TRUE);
+        return $this->_where_in($key, $values, TRUE);
     }
 
     // --------------------------------------------------------------------
@@ -277,7 +298,7 @@ class Mongo_query_builder extends CI_DB {
      */
     public function or_where_in($key = NULL, $values = NULL, $escape = NULL)
     {
-        $this->_where_in($key, $values, FALSE, 'OR');
+        return $this->_where_in($key, $values, FALSE, 'OR');
     }
 
     // --------------------------------------------------------------------
@@ -295,7 +316,7 @@ class Mongo_query_builder extends CI_DB {
      */
     public function or_where_not_in($key = NULL, $values = NULL, $escape = NULL)
     {
-        $this->_where_in($key, $values, TRUE, 'OR');
+        return $this->_where_in($key, $values, TRUE, 'OR');
     }
 
     // --------------------------------------------------------------------
@@ -550,7 +571,7 @@ class Mongo_query_builder extends CI_DB {
      */
     public function having($key, $value = NULL, $escape = NULL)
     {
-        $this->_wh('qb_having', $key, $value);
+        return $this->_wh('qb_having', $key, $value);
     }
 
     // --------------------------------------------------------------------
@@ -567,7 +588,173 @@ class Mongo_query_builder extends CI_DB {
      */
     public function or_having($key, $value = NULL, $escape = NULL)
     {
-        $this->_wh('qb_having', $key, $value, ' OR ');
+        return $this->_wh('qb_having', $key, $value, ' OR ');
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * LIKE
+     *
+     * Generates a %LIKE% portion of the query.
+     * Separates multiple calls with 'AND'.
+     *
+     * @param    mixed $field
+     * @param    string $match
+     * @param    string $side
+     * @param    bool $escape
+     * @return    CI_DB_query_builder
+     */
+    public function like($field, $match = '', $side = 'both', $escape = NULL, $mongoSyntax = FALSE)
+    {
+        return $this->_like($field, $match, 'AND', $side, '', $escape, $mongoSyntax);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * NOT LIKE
+     *
+     * Generates a NOT LIKE portion of the query.
+     * Separates multiple calls with 'AND'.
+     *
+     * @param	mixed	$field
+     * @param	string	$match
+     * @param	string	$side
+     * @param	bool	$escape
+     * @return	CI_DB_query_builder
+     */
+    public function not_like($field, $match = '', $side = 'both', $escape = NULL, $mongoSyntax = FALSE)
+    {
+        return $this->_like($field, $match, 'AND ', $side, 'NOT', $escape, $mongoSyntax);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * OR LIKE
+     *
+     * Generates a %LIKE% portion of the query.
+     * Separates multiple calls with 'OR'.
+     *
+     * @param	mixed	$field
+     * @param	string	$match
+     * @param	string	$side
+     * @param	bool	$escape
+     * @return	CI_DB_query_builder
+     */
+    public function or_like($field, $match = '', $side = 'both', $escape = NULL, $mongoSyntax = FALSE)
+    {
+        return $this->_like($field, $match, 'OR ', $side, '', $escape, $mongoSyntax);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * OR NOT LIKE
+     *
+     * Generates a NOT LIKE portion of the query.
+     * Separates multiple calls with 'OR'.
+     *
+     * @param	mixed	$field
+     * @param	string	$match
+     * @param	string	$side
+     * @param	bool	$escape
+     * @return	CI_DB_query_builder
+     */
+    public function or_not_like($field, $match = '', $side = 'both', $escape = NULL, $mongoSyntax = FALSE)
+    {
+        return $this->_like($field, $match, 'OR ', $side, 'NOT', $escape, $mongoSyntax);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Internal LIKE
+     *
+     * @used-by	like()
+     * @used-by	or_like()
+     * @used-by	not_like()
+     * @used-by	or_not_like()
+     *
+     * @param	mixed	$field
+     * @param	string	$match
+     * @param	string	$type
+     * @param	string	$side
+     * @param	string	$not
+     * @param	bool	$escape
+     * @return	CI_DB_query_builder
+     */
+    protected function _like($field, $match = '', $type = 'AND ', $side = 'both', $not = '', $escape = NULL, $mongoSyntax = FALSE)
+    {
+        if ( ! is_array($field))
+        {
+            $field = array($field => $match);
+        }
+
+        $flag = 'imsx';
+
+        foreach ($field as $k => $v)
+        {
+            if(!$mongoSyntax){
+                $v = $this->_wildcard_mongo($v);
+            }
+
+            if($not === 'NOT') {
+                $v = "[!{$v}]";
+            }
+
+            switch($side) {
+                case 'none':{
+                    $v = '/^'.$v.'$/'.$flag;
+                    break;
+                }
+                case 'before':{
+                    $v = '/'.$v.'$/'.$flag;
+                    break;
+                }
+                case 'after':{
+                    $v = '/^'.$v.'/'.$flag;
+                    break;
+                }
+                default:{
+                    $v = '/'.$v.'/'.$flag;
+                    break;
+                }
+            }
+
+            $re = new MongoRegex($v);
+            $field[$k] = array('$regex' => $re);
+        }
+
+        if(trim($type) === 'OR'){
+            $this->qb_where = $this->_build_or_where($this->qb_where, $field);
+        }else {
+            $this->qb_where = array_merge_recursive($this->qb_where, $field);
+        }
+
+        return $this;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Wildcard in Mongo
+     *
+     * convert SQL wildcard to Regular Expression of MongoDB
+     *
+     * @used-by	_like()
+     *
+     * @param	string  $match
+     *
+     * @return	match converted
+     */
+    protected function _wildcard_mongo($match)
+    {
+
+        $match = str_replace($this->sql_wildcard, $this->mongo_regex, $match);
+
+        return $match;
     }
 
     // --------------------------------------------------------------------
@@ -646,7 +833,7 @@ class Mongo_query_builder extends CI_DB {
      */
     public function select_min($select = '', $alias = '')
     {
-        $this->_max_min_avg_sum($select, $alias, 'MIN');
+        return $this->_max_min_avg_sum($select, $alias, 'MIN');
     }
 
     // --------------------------------------------------------------------
@@ -663,7 +850,7 @@ class Mongo_query_builder extends CI_DB {
 
     public function select_avg($select = '', $alias = '')
     {
-        $this->_max_min_avg_sum($select, $alias, 'AVG');
+        return $this->_max_min_avg_sum($select, $alias, 'AVG');
     }
 
     // --------------------------------------------------------------------
@@ -679,7 +866,7 @@ class Mongo_query_builder extends CI_DB {
      */
     public function select_sum($select = '', $alias = '')
     {
-        $this->_max_min_avg_sum($select, $alias, 'SUM');
+        return $this->_max_min_avg_sum($select, $alias, 'SUM');
     }
 
     // --------------------------------------------------------------------

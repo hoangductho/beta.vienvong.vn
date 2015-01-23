@@ -641,24 +641,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     // --------------------------------------------------------------------
 
     /**
-     * LIKE
-     *
-     * Generates a %LIKE% portion of the query.
-     * Separates multiple calls with 'AND'.
-     *
-     * @param    mixed $field
-     * @param    string $match
-     * @param    string $side
-     * @param    bool $escape
-     * @return    CI_DB_query_builder
-     */
-    public function like($field, $match = '', $side = 'both', $escape = NULL)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
      * LIMIT
      *
      * @param    int $value LIMIT value
@@ -683,24 +665,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     // --------------------------------------------------------------------
 
     /**
-     * NOT LIKE
-     *
-     * Generates a NOT LIKE portion of the query.
-     * Separates multiple calls with 'AND'.
-     *
-     * @param    mixed $field
-     * @param    string $match
-     * @param    string $side
-     * @param    bool $escape
-     * @return    CI_DB_query_builder
-     */
-    public function not_like($field, $match = '', $side = 'both', $escape = NULL)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
      * Starts a query group, but ORs the group
      *
      * @return    CI_DB_query_builder
@@ -712,47 +676,11 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     // --------------------------------------------------------------------
 
     /**
-     * OR LIKE
-     *
-     * Generates a %LIKE% portion of the query.
-     * Separates multiple calls with 'OR'.
-     *
-     * @param    mixed $field
-     * @param    string $match
-     * @param    string $side
-     * @param    bool $escape
-     * @return    CI_DB_query_builder
-     */
-    public function or_like($field, $match = '', $side = 'both', $escape = NULL)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
      * Starts a query group, but OR NOTs the group
      *
      * @return    CI_DB_query_builder
      */
     public function or_not_group_start()
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * OR NOT LIKE
-     *
-     * Generates a NOT LIKE portion of the query.
-     * Separates multiple calls with 'OR'.
-     *
-     * @param    mixed $field
-     * @param    string $match
-     * @param    string $side
-     * @param    bool $escape
-     * @return    CI_DB_query_builder
-     */
-    public function or_not_like($field, $match = '', $side = 'both', $escape = NULL)
     {
     }
 
