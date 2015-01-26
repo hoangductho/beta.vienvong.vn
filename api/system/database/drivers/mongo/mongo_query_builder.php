@@ -105,6 +105,14 @@ class Mongo_query_builder extends CI_DB {
     {
         $select = array();
 
+        if($this->qb_distinct === true) {
+            foreach($this->qb_select as $select_key=> $select_val) {
+                if($select_val) {
+                    $this->group_by($select_key);
+                }
+            }
+        }
+
         // Filter Where conditions
         if(!empty($this->qb_where)) {
             array_push($select, array('$match'=>$this->qb_where));
@@ -124,14 +132,19 @@ class Mongo_query_builder extends CI_DB {
                 array_push($select, array('$skip' => $this->qb_offset));
             }
 
-            // build limit condition
-            if(!empty($this->qb_limit)) {
-                array_push($select, array('$limit' => $this->qb_limit));
+            // build order by condition
+            if(!empty($this->qb_orderby)) {
+                array_push($select, array('$sort' => $this->qb_orderby));
             }
 
             // build select required
             if(!empty($this->qb_select)) {
                 array_push($select, array('$project' => $this->qb_select));
+            }
+
+            // build limit condition
+            if(!empty($this->qb_limit)) {
+                array_push($select, array('$limit' => $this->qb_limit));
             }
         }
 
@@ -140,7 +153,6 @@ class Mongo_query_builder extends CI_DB {
             array_push($select, array('$match'=>$this->qb_having));
         }
 
-        var_dump($select[0]['$match']);
         return $select;
     }
 
@@ -407,8 +419,6 @@ class Mongo_query_builder extends CI_DB {
             $match[$key] = array('$nin' => $values);
         }
 
-//        array_push($match[$key], );
-
         if(trim($type) === 'OR'){
             $this->qb_where = $this->_build_or_where($this->qb_where, $match);
         }else {
@@ -458,10 +468,27 @@ class Mongo_query_builder extends CI_DB {
      * @return	string	SQL statement
      */
     protected function _compile_where_comparison($key, $value) {
+
+        // replace all whitespace
+        $key = str_replace(' ', '', $key);
+
         foreach ($this->comparison as $comp_key => $comp_val) {
             if(strpos($key, $comp_val) !== FALSE) {
+                $key = trim(str_replace($comp_val,' ', $key));
+
+                if(strpos($key, ' ') !== FALSE) {
+                    $key = explode(' ', $key);
+
+                    return array(
+                        'key' => $key[0],
+                        'value' => array(
+                            $comp_key => $key[1]
+                        )
+                    );
+                }
+
                 return array(
-                    'key' => trim(str_replace($comp_val,'', $key)),
+                    'key' => $key,
                     'value' => array(
                         $comp_key => $value
                     )
@@ -552,7 +579,11 @@ class Mongo_query_builder extends CI_DB {
             }
         }
 
-        $this->qb_groupby['$group']['_id'] = $group;
+        if(empty($this->qb_groupby['$group']['_id'])){
+            $this->qb_groupby['$group']['_id']= $group;
+        }else {
+            $this->qb_groupby['$group']['_id'] = array_merge($this->qb_groupby['$group']['_id'],$group);
+        }
 
         return $this;
     }
@@ -907,6 +938,82 @@ class Mongo_query_builder extends CI_DB {
         $result = $this->get($table);
 
         return count($result['result']);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * ORDER BY
+     *
+     * @param    string $orderby
+     * @param    string $direction ASC, DESC or RANDOM
+     * @param    bool $escape
+     * @return    CI_DB_query_builder
+     */
+    public function order_by($orderby, $direction = '', $escape = NULL)
+    {
+        if(strpos(trim($orderby), ' ')) {
+            $orderby = explode(',', $orderby);
+
+            foreach ($orderby as $order_param) {
+                $param = explode(' ', $order_param);
+                $parameters = array();
+
+                foreach($param as $value) {
+                    if(!empty($value)) {
+                        $parameters[] = $value;
+                    }
+                }
+
+                if(count($parameters) === 2) {
+                    $this->_build_orderby_params($parameters[0], $parameters[1]);
+                }
+            }
+
+        }else {
+            $this->_build_orderby_params($orderby, $direction);
+        }
+
+        return $this;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * ORDER BY
+     *
+     * @param    string $orderby
+     * @param    string $direction ASC, DESC or RANDOM
+     * @param    bool $escape
+     * @return    CI_DB_query_builder
+     */
+
+    private function _build_orderby_params($orderby, $direction ) {
+        switch(strtoupper(trim($direction))) {
+            case '': {
+                $direction = 0;
+                break;
+            }
+            case 'DESC': {
+                $direction = -1;
+                break;
+            }
+            case 'ASC': {
+                $direction = 1;
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+
+        $orderby = array($orderby => $direction);
+
+        if(empty($this->qb_orderby)) {
+            $this->qb_orderby = $orderby;
+        }else {
+            $this->qb_orderby = array_merge($this->qb_orderby, $orderby);
+        }
     }
 
     // --------------------------------------------------------------------

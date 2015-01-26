@@ -404,20 +404,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     // --------------------------------------------------------------------
 
     /**
-     * DISTINCT
-     *
-     * Sets a flag which tells the query string compiler to add DISTINCT
-     *
-     * @param    bool $val
-     * @return    CI_DB_query_builder
-     */
-    public function distinct($val = true)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
      * Calculate the aggregate query elapsed time
      *
      * @param    int    The number of decimal places
@@ -438,49 +424,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
      * @return    object
      */
     public function empty_table($table = '')
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * "Smart" Escape String
-     *
-     * Escapes data based on type
-     * Sets boolean and null types
-     *
-     * @param    string
-     * @return    mixed
-     */
-    public function escape($str)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Escape LIKE String
-     *
-     * Calls the individual driver for platform
-     * specific escaping for LIKE conditions
-     *
-     * @param    string|string[]
-     * @return    mixed
-     */
-    public function escape_like_str($str)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Escape String
-     *
-     * @param    string|string[] $str Input string
-     * @param    bool $like Whether or not the string will be used in a LIKE condition
-     * @return    string
-     */
-    public function escape_str($str, $like = false)
     {
     }
 
@@ -681,20 +624,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
      * @return    CI_DB_query_builder
      */
     public function or_not_group_start()
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * ORDER BY
-     *
-     * @param    string $orderby
-     * @param    string $direction ASC, DESC or RANDOM
-     * @param    bool $escape
-     * @return    CI_DB_query_builder
-     */
-    public function order_by($orderby, $direction = '', $escape = NULL)
     {
     }
 

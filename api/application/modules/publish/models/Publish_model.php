@@ -18,6 +18,7 @@ class Publish_model extends CI_Model {
         $suser = 'a516a631663c9724b06c7492bccf4f5a';
 
         $this->db->select('UID, ID, Time, Title, Express');
+//        $this->db->distinct();
         $this->db->from('Posts');
 //        $this->db->where($user2);
 //        $this->db->where('ID > ', 520);
@@ -27,6 +28,8 @@ class Publish_model extends CI_Model {
         $this->db->limit(20);
         $this->db->offset(0);
 //        $this->db->group_by(array('Keyword'));
+        $this->db->order_by('Title   Asc  ');
+        $this->db->order_by('ID', 'Desc');
 //        $this->db->select_max('ID', 'avgID');
 //        $this->db->having('avgID > ', 100);
         print_r($this->db->get_compiled_select('', false));
