@@ -43,6 +43,13 @@ class Mongo_query_builder extends CI_DB {
         1 => '])',
         2 => '.{1}');
 
+    /**
+     * Group Where Queue Caching
+     *
+     * Storage queue of groups content
+     */
+    private $mongo_group_queue = array();
+
     // --------------------------------------------------------------------
     /**
      * Get
@@ -369,11 +376,7 @@ class Mongo_query_builder extends CI_DB {
             $match[$complie['key']] = $complie['value'];
         }
 
-        if(trim($type) === 'OR'){
-            $this->{$qb_key} = $this->_build_or_where($this->{$qb_key}, $match);
-        }else {
-            $this->{$qb_key} = array_merge_recursive($this->{$qb_key}, $match);
-        }
+        $this->_build_where_condition($match, $type);
 
         return $this;
     }
@@ -419,11 +422,7 @@ class Mongo_query_builder extends CI_DB {
             $match[$key] = array('$nin' => $values);
         }
 
-        if(trim($type) === 'OR'){
-            $this->qb_where = $this->_build_or_where($this->qb_where, $match);
-        }else {
-            $this->qb_where = array_merge_recursive($this->qb_where, $match);
-        }
+        $this->_build_where_condition($match, $type);
 
         return $this;
     }
@@ -450,6 +449,40 @@ class Mongo_query_builder extends CI_DB {
         }
 
         return $where;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Build Where Condition
+     *
+     * Push phrase of Where conditions into qb_where or qb_where_group_started
+     *
+     * @param   array   $match
+     * @param   string  $type
+     * @return  current stage of object
+     */
+    private function _build_where_condition($match, $type='AND') {
+
+        if($this->qb_where_group_count > 0) {
+            $current = $this->qb_where_group_started[$this->qb_where_group_count];
+
+            if(trim($type) === 'OR'){
+                $current = $this->_build_or_where($current, $match);
+            }else {
+                $current = array_merge_recursive($current, $match);
+            }
+
+            $this->qb_where_group_started[$this->qb_where_group_count] = $current;
+        }else {
+            if(trim($type) === 'OR'){
+                $this->qb_where = $this->_build_or_where($this->qb_where, $match);
+            }else {
+                $this->qb_where = array_merge_recursive($this->qb_where, $match);
+            }
+        }
+
+        return $this;
     }
 
     // --------------------------------------------------------------------
@@ -758,11 +791,7 @@ class Mongo_query_builder extends CI_DB {
             $field[$k] = array('$regex' => $re);
         }
 
-        if(trim($type) === 'OR'){
-            $this->qb_where = $this->_build_or_where($this->qb_where, $field);
-        }else {
-            $this->qb_where = array_merge_recursive($this->qb_where, $field);
-        }
+        $this->_build_where_condition($field, $type);
 
         return $this;
     }
@@ -903,27 +932,6 @@ class Mongo_query_builder extends CI_DB {
     // --------------------------------------------------------------------
 
     /**
-     * "Count All" query
-     *
-     * Generates a platform-specific query string that counts all records in
-     * the specified database
-     *
-     * @param    string
-     * @return    int
-     */
-    public function count_all($table = '')
-    {
-        if ($table === '')
-        {
-            return 0;
-        }
-
-        return $this->db->{$table}->count();
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
      * "Count All Results" query
      *
      * Generates a platform-specific query string that counts all records
@@ -1014,6 +1022,66 @@ class Mongo_query_builder extends CI_DB {
         }else {
             $this->qb_orderby = array_merge($this->qb_orderby, $orderby);
         }
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * JOIN
+     *
+     * Generates the JOIN portion of the query
+     *
+     * @param    string
+     * @param    string    the join condition
+     * @param    string    the type of join
+     * @param    string    whether not to try to escape identifiers
+     * @return    CI_DB_query_builder
+     */
+    public function join($table, $cond, $type = '', $escape = NULL)
+    {
+        $this->display_error(
+            'MongoDB does not support join table in query.<br>
+                If you want join tables you can using linking
+                <a href="http://docs.mongodb.org/manual/reference/database-references/">DBRef</a>.',
+            'Not support join table',
+            TRUE);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Starts a query group.
+     *
+     * @param    string $not (Internal use only)
+     * @param    string $type (Internal use only)
+     * @return    CI_DB_query_builder
+     */
+    public function group_start($not = '', $type = 'AND ')
+    {
+
+        $this->qb_where_group_count += 1;
+        $this->qb_where_group_started[$this->qb_where_group_count] = array();
+        //var_dump($this->qb_where_group_count);
+        //$this->qb_where_group_started;
+        return $this;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Ends a query group
+     *
+     * @return    CI_DB_query_builder
+     */
+    public function group_end()
+    {
+        $where_group = $this->qb_where_group_started[$this->qb_where_group_count];
+//        $this->qb_where_group_started = array_splice($this->qb_where_group_started, $this->qb_where_group_count, 1);
+        $this->qb_where_group_count --;
+
+        $this->_build_where_condition($where_group);
+
+        return $this;
     }
 
     // --------------------------------------------------------------------

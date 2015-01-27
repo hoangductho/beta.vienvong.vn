@@ -292,6 +292,27 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     // --------------------------------------------------------------------
 
     /**
+     * "Count All" query
+     *
+     * Generates a platform-specific query string that counts all records in
+     * the specified database
+     *
+     * @param    string
+     * @return    int
+     */
+    public function count_all($table = '')
+    {
+        if ($table === '')
+        {
+            return 0;
+        }
+
+        return $this->db->{$table}->count();
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
      * Fetch Field Names
      *
      * @param    string    the table name
@@ -475,30 +496,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     // --------------------------------------------------------------------
 
     /**
-     * Ends a query group
-     *
-     * @return    CI_DB_query_builder
-     */
-    public function group_end()
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Starts a query group.
-     *
-     * @param    string $not (Internal use only)
-     * @param    string $type (Internal use only)
-     * @return    CI_DB_query_builder
-     */
-    public function group_start($not = '', $type = 'AND ')
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
      * Insert
      *
      * Compiles an insert string and runs the query
@@ -550,23 +547,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
      * @return    bool
      */
     public function is_write_type($sql)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * JOIN
-     *
-     * Generates the JOIN portion of the query
-     *
-     * @param    string
-     * @param    string    the join condition
-     * @param    string    the type of join
-     * @param    string    whether not to try to escape identifiers
-     * @return    CI_DB_query_builder
-     */
-    public function join($table, $cond, $type = '', $escape = NULL)
     {
     }
 
@@ -640,6 +620,7 @@ class CI_DB_mongo_driver extends Mongo_query_builder
      */
     public function primary($table)
     {
+        return '_id';
     }
 
     // --------------------------------------------------------------------
