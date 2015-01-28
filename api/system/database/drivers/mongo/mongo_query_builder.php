@@ -48,7 +48,7 @@ class Mongo_query_builder extends CI_DB {
      *
      * Storage queue of groups content
      */
-    private $mongo_group_queue = array();
+    private $mongo_group_status = array();
 
     // --------------------------------------------------------------------
     /**
@@ -376,7 +376,7 @@ class Mongo_query_builder extends CI_DB {
             $match[$complie['key']] = $complie['value'];
         }
 
-        $this->_build_where_condition($match, $type);
+        $this->_build_where_condition($qb_key,$match, $type);
 
         return $this;
     }
@@ -422,7 +422,7 @@ class Mongo_query_builder extends CI_DB {
             $match[$key] = array('$nin' => $values);
         }
 
-        $this->_build_where_condition($match, $type);
+        $this->_build_where_condition('qb_where',$match, $type);
 
         return $this;
     }
@@ -438,14 +438,41 @@ class Mongo_query_builder extends CI_DB {
      * @param   array   $match
      * @return  array   new statement of where condition
      */
-    protected function _build_or_where($where, $match) {
-        if(empty($where)) {
-            $where = $match;
+    protected function _or_and_where($where, $match, $type = 'AND', $not ='') {
+
+        if(trim($type) == 'OR'){
+            $type = '$or';
+            if(trim($not) == 'NOT') {
+                $type = '$nor';
+            }
         }else {
-            $order['$or'] = array();
-            array_push($order['$or'], $where);
-            array_push($order['$or'], $match);
-            $where = $order;
+            $type = '$and';
+
+            if(trim($not) == 'NOT') {
+                $type = '$not';
+            }
+        }
+
+        if(empty($where)) {
+            if($type == '$not' && $this->qb_where_group_count == 0) {
+                $order['$nor'] = array();
+                $current_match['$and'] = array($match, array('true'=>true));
+                array_push($order['$nor'], $current_match);
+                $where = $order;
+            }else {$where = $match;}
+
+        }else {
+            if($type == '$not') {
+                $order['$nor'] = array();
+                $current_match['$and'] = array($where, $match);
+                array_push($order['$nor'], $current_match);
+                $where = $order;
+            }else {
+                $order[$type] = array();
+                array_push($order[$type], $where);
+                array_push($order[$type], $match);
+                $where = $order;
+            }
         }
 
         return $where;
@@ -462,24 +489,17 @@ class Mongo_query_builder extends CI_DB {
      * @param   string  $type
      * @return  current stage of object
      */
-    private function _build_where_condition($match, $type='AND') {
+    private function _build_where_condition($qb_key, $match, $type='AND') {
 
-        if($this->qb_where_group_count > 0) {
+        if($this->qb_where_group_count > 0 AND $qb_key == 'qb_where') {
             $current = $this->qb_where_group_started[$this->qb_where_group_count];
+            $not = $this->mongo_group_status[$this->qb_where_group_count][0];
 
-            if(trim($type) === 'OR'){
-                $current = $this->_build_or_where($current, $match);
-            }else {
-                $current = array_merge_recursive($current, $match);
-            }
+            $current = $this->_or_and_where($current, $match, $type, $not);
 
             $this->qb_where_group_started[$this->qb_where_group_count] = $current;
         }else {
-            if(trim($type) === 'OR'){
-                $this->qb_where = $this->_build_or_where($this->qb_where, $match);
-            }else {
-                $this->qb_where = array_merge_recursive($this->qb_where, $match);
-            }
+            $this->{$qb_key} = $this->_or_and_where($this->{$qb_key}, $match, $type);
         }
 
         return $this;
@@ -791,7 +811,7 @@ class Mongo_query_builder extends CI_DB {
             $field[$k] = array('$regex' => $re);
         }
 
-        $this->_build_where_condition($field, $type);
+        $this->_build_where_condition('qb_where',$field, $type);
 
         return $this;
     }
@@ -1060,9 +1080,52 @@ class Mongo_query_builder extends CI_DB {
     {
 
         $this->qb_where_group_count += 1;
+        $this->mongo_group_status[$this->qb_where_group_count][0] = $not;
+        $this->mongo_group_status[$this->qb_where_group_count][1] = $type;
         $this->qb_where_group_started[$this->qb_where_group_count] = array();
-        //var_dump($this->qb_where_group_count);
-        //$this->qb_where_group_started;
+
+        return $this;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Starts a query group, but NOTs the group
+     *
+     * @return    CI_DB_query_builder
+     */
+    public function not_group_start()
+    {
+        $this->group_start('NOT');
+
+        return $this;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Starts a query group, but ORs the group
+     *
+     * @return    CI_DB_query_builder
+     */
+    public function or_group_start()
+    {
+        $this->group_start('', 'OR');
+
+        return $this;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Starts a query group, but OR NOTs the group
+     *
+     * @return    CI_DB_query_builder
+     */
+    public function or_not_group_start()
+    {
+        $this->group_start('NOT', 'OR');
+
         return $this;
     }
 
@@ -1075,11 +1138,16 @@ class Mongo_query_builder extends CI_DB {
      */
     public function group_end()
     {
-        $where_group = $this->qb_where_group_started[$this->qb_where_group_count];
-//        $this->qb_where_group_started = array_splice($this->qb_where_group_started, $this->qb_where_group_count, 1);
-        $this->qb_where_group_count --;
+        if($this->qb_where_group_count > 0) {
+            // get data was cached
+            $where_group = $this->qb_where_group_started[$this->qb_where_group_count];
+            $type = $this->mongo_group_status[$this->qb_where_group_count][1];
 
-        $this->_build_where_condition($where_group);
+            // restore counting of grouping
+            $this->qb_where_group_count --;
+
+            $this->_build_where_condition('qb_where',$where_group, $type);
+        }
 
         return $this;
     }

@@ -564,52 +564,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     // --------------------------------------------------------------------
 
     /**
-     * LIMIT
-     *
-     * @param    int $value LIMIT value
-     * @param    int $offset OFFSET value
-     * @return    CI_DB_query_builder
-     */
-    /*public function limit($value, $offset = 0)
-    {
-    }*/
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Starts a query group, but NOTs the group
-     *
-     * @return    CI_DB_query_builder
-     */
-    public function not_group_start()
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Starts a query group, but ORs the group
-     *
-     * @return    CI_DB_query_builder
-     */
-    public function or_group_start()
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Starts a query group, but OR NOTs the group
-     *
-     * @return    CI_DB_query_builder
-     */
-    public function or_not_group_start()
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
      * Primary
      *
      * Retrieves the primary key. It assumes that the row in the first
