@@ -80,6 +80,8 @@ class Mongo_query_builder extends CI_DB {
         if ( ! empty($limit))
         {
             $this->limit($limit, $offset);
+        }elseif(!empty($offset)) {
+            $this->offset($offset);
         }
 
         $table = str_replace('`','',$this->qb_from[0]);
@@ -93,7 +95,13 @@ class Mongo_query_builder extends CI_DB {
         $result = $result = $this->db->{$table}
             ->aggregate($select);
 
-        $this->_reset_select();
+        // Save the query for debugging
+        if ($this->save_queries === TRUE)
+        {
+            $this->queries[] = $this->get_compiled_select();
+        }else {
+            $this->_reset_select();
+        }
 
         return $result;
     }
@@ -127,10 +135,7 @@ class Mongo_query_builder extends CI_DB {
 
         if(!empty($this->qb_groupby)) {
 
-            // Group By compute
-            if(!empty($this->qb_groupby)) {
-                array_push($select, $this->qb_groupby);
-            }
+            array_push($select, $this->qb_groupby);
 
         }else {
 
@@ -879,6 +884,14 @@ class Mongo_query_builder extends CI_DB {
             $this->group_by(null, FALSE);
         }
 
+        if(!empty($this->qb_select) && ($type == 'max' || $type == 'min')) {
+            foreach($this->qb_select as $select_key=>$select_val) {
+                if($select_val){
+                    $this->qb_groupby['$group'][$select_key]['$addToSet'] = '$'.$select_key;
+                }
+            }
+        }
+
         return $this;
     }
 
@@ -1150,6 +1163,170 @@ class Mongo_query_builder extends CI_DB {
         }
 
         return $this;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Delete
+     *
+     * Compiles a delete string and runs the query
+     *
+     * @param    mixed    the table(s) to delete from. String or array
+     * @param    mixed    the where clause
+     * @param    mixed    the limit clause
+     * @param    bool
+     * @return    mixed
+     */
+    public function delete($table = '', $where = '', $limit = NULL, $reset_data = true)
+    {
+        // set table will be query
+        if ($table !== '')
+        {
+            $list_table = array();
+
+            if(!empty($this->qb_from)) {
+                $list_table = $this->qb_from;
+            }
+
+            if(!is_array($table)) {
+                $this->from($table);
+                $table = array(str_replace('`','',$this->qb_from[0]));
+            }
+
+            foreach($table as $table_name) {
+                array_push($list_table, $table_name);
+            }
+
+            $this->qb_from = $list_table;
+
+        }elseif(empty($this->qb_from)) {
+            $this->display_error('Table\'s name just never setup.','',TRUE);
+        }
+
+        // set where conditions
+        if($where != '') {
+            $this->where($where);
+        }
+
+        // check where condition
+        if (count($this->qb_where) === 0)
+        {
+            return ($this->db_debug) ? $this->display_error('db_del_must_use_where') : FALSE;
+        }
+
+        // set limit and offset conditions
+        if ( ! empty($limit))
+        {
+            $this->limit($limit);
+        }
+
+        $cursor = $this->db->{$this->qb_from[0]}->find();
+        foreach ($cursor as $doc) {
+            var_dump($doc);
+        }
+
+        $remove = array();
+
+        // delete data into table
+        foreach($this->qb_from as $remover) {
+            var_dump($remover, $this->qb_where);
+
+            $remove[] = $this->db->{$remover}->remove($this->qb_where);
+        }
+
+        if ($reset_data)
+        {
+            $this->_reset_write();
+        }
+
+        // Save the query for debugging
+        if ($this->save_queries === TRUE)
+        {
+            $this->queries[] = $this->get_compiled_select();
+        }else {
+            $this->_reset_select();
+        }
+
+        return $remove;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Empty Table
+     *
+     * Compiles a delete string and runs "DELETE FROM table"
+     *
+     * @param    string    the table to empty
+     * @return    object
+     */
+    public function empty_table($table = '')
+    {
+        // set table will be query
+        if ($table !== '')
+        {
+            if(!empty($this->qb_from[0])) {
+                $this->qb_from = null;
+            }
+            $this->from($table);
+        }elseif(empty($this->qb_from[0])) {
+            $this->display_error('Table\'s name just never setup.','',TRUE);
+        }
+
+        $table = str_replace('`','',$this->qb_from[0]);
+
+        return $this->db->{$table}->remove(array());
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Truncate
+     *
+     * Compiles a truncate string and runs the query
+     * If the database does not support the truncate() command
+     * This function maps to "DELETE FROM table"
+     *
+     * @param    string    the table to truncate
+     * @return    object
+     */
+    public function truncate($table = '')
+    {
+        return $this->empty_table($table);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Get DELETE query string
+     *
+     * Compiles a delete query string and returns the sql
+     *
+     * @param    string    the table to delete from
+     * @param    bool    TRUE: reset QB values; FALSE: leave QB values alone
+     * @return    string
+     */
+    public function get_compiled_delete($table = '', $reset = true)
+    {
+        // set table will be query
+        if ($table !== '')
+        {
+            if(!empty($this->qb_from[0])) {
+                $this->qb_from = null;
+            }
+            $this->from($table);
+        }elseif(empty($this->qb_from[0])) {
+            $this->display_error('Table\'s name just never setup.','',TRUE);
+        }
+
+        $table = str_replace('`','',$this->qb_from[0]);
+
+        $where = json_encode($this->qb_where, true);
+
+        $delete = "db.{$table}.remove({$where})";
+
+        return $delete;
     }
 
     // --------------------------------------------------------------------

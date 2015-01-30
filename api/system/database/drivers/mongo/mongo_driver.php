@@ -371,18 +371,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     // --------------------------------------------------------------------
 
     /**
-     * Enables a native PHP function to be run, using a platform agnostic wrapper.
-     *
-     * @param    string $function Function name
-     * @return    mixed
-     */
-    public function call_function($function)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
      * Compile Bindings
      *
      * @param    string    the sql statement
@@ -391,6 +379,8 @@ class CI_DB_mongo_driver extends Mongo_query_builder
      */
     public function compile_binds($sql, $binds)
     {
+        $this->display_error('Mongo Driver not support compile_binds function',
+                            'Mongo Driver not support', TRUE);
     }
 
     // --------------------------------------------------------------------
@@ -403,64 +393,9 @@ class CI_DB_mongo_driver extends Mongo_query_builder
      */
     public function db_set_charset($charset)
     {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Delete
-     *
-     * Compiles a delete string and runs the query
-     *
-     * @param    mixed    the table(s) to delete from. String or array
-     * @param    mixed    the where clause
-     * @param    mixed    the limit clause
-     * @param    bool
-     * @return    mixed
-     */
-    public function delete($table = '', $where = '', $limit = NULL, $reset_data = true)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Calculate the aggregate query elapsed time
-     *
-     * @param    int    The number of decimal places
-     * @return    string
-     */
-    public function elapsed_time($decimals = 6)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Empty Table
-     *
-     * Compiles a delete string and runs "DELETE FROM table"
-     *
-     * @param    string    the table to empty
-     * @return    object
-     */
-    public function empty_table($table = '')
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Get DELETE query string
-     *
-     * Compiles a delete query string and returns the sql
-     *
-     * @param    string    the table to delete from
-     * @param    bool    TRUE: reset QB values; FALSE: leave QB values alone
-     * @return    string
-     */
-    public function get_compiled_delete($table = '', $reset = true)
-    {
+        $this->display_error('Mongo Drive not support db_set_charset function.
+                            \n Because MongoDB storage by <a href="http://bsonspec.org/#/specification">BSON</a> object, and using UTF-8 as soon as default.',
+            'Mongo Driver not support', TRUE);
     }
 
     // --------------------------------------------------------------------
@@ -547,17 +482,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
      * @return    bool
      */
     public function is_write_type($sql)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Returns the last query that was executed
-     *
-     * @return    string
-     */
-    public function last_query()
     {
     }
 
@@ -674,17 +598,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
     // --------------------------------------------------------------------
 
     /**
-     * Returns the total number of queries
-     *
-     * @return    int
-     */
-    public function total_queries()
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
      * Complete Transaction
      *
      * @return    bool
@@ -741,22 +654,6 @@ class CI_DB_mongo_driver extends Mongo_query_builder
      * @return    void
      */
     public function trans_strict($mode = true)
-    {
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Truncate
-     *
-     * Compiles a truncate string and runs the query
-     * If the database does not support the truncate() command
-     * This function maps to "DELETE FROM table"
-     *
-     * @param    string    the table to truncate
-     * @return    object
-     */
-    public function truncate($table = '')
     {
     }
 
